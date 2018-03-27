@@ -15,6 +15,10 @@
     <script type="text/javascript">
         var token="{{ csrf_token() }}";
 
+        function initiate(){
+        	showSongs();
+        }
+
         function showSongs(){
          	var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
@@ -29,15 +33,89 @@
             xhr.send(parametros);   
         }
 
-        function playSong(song){
-          document.getElementById('mp3').src="D:\\Users\\musica\\OTROS\\"+song+".mp3";
-          document.write(document.getElementById('mp3').src);
+        function playClickedSong(song, track){
+        	document.getElementById('mp3').title=track;
+        	document.getElementById('mp3').src="./music/"+song+".mp3";
+        	showSongData(track);
+        	document.getElementById("playIcon").src="./images/play.png";
+        	document.getElementById('mp3').play();
+        }
+
+        function playSong(){
+        	if(document.getElementById("playIcon").src=="./images/play.png"){
+        		alert("jelous");
+        		document.getElementById("playIcon").src="./images/pause.png";
+        		document.getElementById('mp3').pause();
+       		}else{
+	        	if(document.getElementById("mp3").title==""){
+	        		document.getElementById("mp3").title="1";
+	        	}
+	        	var actualTrack=document.getElementById("mp3").title;
+	        	var song=document.getElementById(actualTrack).innerHTML;
+	        	document.getElementById('mp3').src="./music/"+encodeURIComponent(song)+".mp3";
+	        	showSongData(actualTrack);
+	        	document.getElementById("playIcon").src="./images/play.png";
+	        	document.getElementById('mp3').play();
+	        }
+        }
+
+        function nextSong(){
+        	var actualTrack=document.getElementById("mp3").title;
+	        actualTrack++;
+        	if(document.getElementById(actualTrack)!=null){
+	        	var actualTrack=document.getElementById("mp3").title;
+	        	actualTrack++;
+	        	document.getElementById("mp3").title=actualTrack;
+        	}else{
+        		actualTrack=1;
+	        	document.getElementById("mp3").title=actualTrack;
+        	}
+        	var song=document.getElementById(parseInt(actualTrack)).innerHTML;
+        	document.getElementById('mp3').src="./music/"+encodeURIComponent(song)+".mp3";
+        	showSongData(actualTrack);
+        	document.getElementById("playIcon").src="./images/play.png";
+        	document.getElementById('mp3').play();
+        }
+
+        function prevSong(){
+        	var actualTrack=document.getElementById("mp3").title;
+	        actualTrack--;
+        	if(document.getElementById(actualTrack)!=null){
+	        	var actualTrack=document.getElementById("mp3").title;
+	        	actualTrack--;
+	        	document.getElementById("mp3").title=actualTrack;
+        	}else{
+        		actualTrack=parseInt(document.getElementById("1").title);
+	        	document.getElementById("mp3").title=actualTrack;
+        	}
+        	var song=document.getElementById(parseInt(actualTrack)).innerHTML;
+        	document.getElementById('mp3').src="./music/"+encodeURIComponent(song)+".mp3";
+        	showSongData(actualTrack);
+        	document.getElementById("playIcon").src="./images/play.png";
+        	document.getElementById('mp3').play();
+        }
+
+        function showSongData(track){
+        	document.getElementById("message").innerHTML="";
+
+        	var name=document.getElementById("h"+track+1).title;
+        	var artist=document.getElementById("h"+track+2).title;
+        	var album=document.getElementById("h"+track+3).title;
+        	var genre=document.getElementById("h"+track+4).title;
+        	document.getElementById("nowPlaying").innerHTML="<marquee>"+name+" - "+artist+" - "+album+" - "+genre+"</marquee>";
+        }
+
+        function setIcon(){
+        	if(document.getElementById("playIcon").src=="./images/play.png"){
+        		document.getElementById("playIcon").src="./images/pause.png";
+        		document.getElementById('mp3').pause();
+       		}
         }
 
     </script>
 
   	</head>
-  	<body onload="showSongs();">
+  	<body onLoad="initiate();">
   		<nav class="navbar navbar-expand navbar-light bg-light">
 		    <a class="navbar-brand" href="#">
 		      	<img src="" width="38" height="38" class="d-inline-block align-top" alt="">MusiCall
@@ -94,9 +172,9 @@
 
 			<div class="row align-items-center justify-content-center">
                 <div class="mpButtons">
-                    <input type="image" class="playImg col ml-3" src="./images/back.png"/>
-                    <input type="image" class="playImg col ml-3" src="./images/play.png"/>
-                  	<input type="image" class="playImg col ml-3" src="./images/next.png"/>
+                    <input type="image" class="playImg col ml-3" src="./images/back.png" onClick="prevSong();"/>
+                    <input type="image" id="playIcon" class="playImg col ml-3" src="./images/play.png" onClick="playSong();"/>
+                  	<input type="image" class="playImg col ml-3" src="./images/next.png" onClick="nextSong();"/>
                	</div>
             </div>
 
@@ -105,21 +183,33 @@
            	</div>
 
             <div class="row">
-                <?php
-                   	if(isset($message)){
-                        echo $message;
-                    }else if(isset($error)){
-                       	echo $error;
-                   	}
-               	?>
+            	<div id="message">
+	                <?php
+	                   	if(isset($message)){
+	                        echo $message;
+	                    }else if(isset($error)){
+	                       	echo $error;
+	                   	}
+	               	?>
+	            </div>
+               	<br>
+               	<div id="nowPlaying" class="col-md-12 col-sm-12 col-xs-12"></div>
             </div>
             <div class="row">
            	 	<hr>
-              <audio id="mp3" src="Toto - Africa.mp3" class="col-md-12" controls></audio>
-           	</div>
-            <div class="row">
+              	<audio id="mp3" title="" src="" class="col-md-12" controls controlsList="nodownload"></audio>
 
-            </div>
+              	<br><br>
+            	<!--
+            	<div> 
+					<button onclick="document.getElementById('mp3').play()">Play</button> 
+					<button onclick="document.getElementById('mp3').pause()">Pause</button> 
+					<button onclick="document.getElementById('mp3').volume += 0.1">Vol+ </button> 
+					<button onclick="document.getElementById('mp3').volume -= 0.1">Vol- </button> 
+			  	</div>
+				-->
+           	</div>
+            <div class="row"></div>
         </div>
 
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>

@@ -12,14 +12,10 @@ class musiCallController extends Controller{
         $DirectoryToScan=$request->mpPath;
         if($DirectoryToScan!=""){
             if(is_dir($DirectoryToScan)){
-                $DirectoryToScan=$request->mpPath;
                 $songsFullTags=$this->getFullTags($DirectoryToScan);
 
                 /////////////////////////////////////////////////////
-                $datos=array();
-
                 $exists;
-
                 $songsUploaded=0;
 
                 for($i=0;$i<count($songsFullTags);$i++){
@@ -33,8 +29,6 @@ class musiCallController extends Controller{
                         
                     $songs=DB::select('SELECT * FROM t_songs;');
 
-
-
                     if(count($songs)>0){   
                         for($j=0;$j<count($songs);$j++){
                             if($title == $songs[$j]->name && $artist == $songs[$j]->artist){
@@ -44,13 +38,19 @@ class musiCallController extends Controller{
                         if($exists==true){
                             $message=$songsUploaded." new songs uploaded.";
                         }else{
-                            DB::insert('INSERT INTO t_songs (name, artist, album, genre, length) VALUES (?,?,?,?,?)',[$title, $artist, $album, $genre, $length]);
+                            DB::insert('INSERT INTO t_songs (name, artist, album, genre, length) VALUES (?,?,?,?,?)',[utf8_encode($title), utf8_encode($artist), utf8_encode($album), utf8_encode($genre), $length]);
                             $songsUploaded++;
+                            //Method to move a file from one directory to another. rename(origin/name, destiny/name)
+                            copy($DirectoryToScan."\\".$title.".mp3", ".\\music\\".$title.".mp3");
+                            //Method to move a file from one directory to another. rename(origin/name, destiny/name)
+                            //rename($DirectoryToScan."\\".$title.".mp3", ".\\music\\".$title.".mp3");
                             $message=$songsUploaded." new songs uploaded.";
                         }
                     }else{
-                        DB::insert('INSERT INTO t_songs (name, artist, album, genre, length) VALUES (?,?,?,?,?)',[$title, $artist, $album, $genre, $length]);
+                        DB::insert('INSERT INTO t_songs (name, artist, album, genre, length) VALUES (?,?,?,?,?)',[utf8_encode($title), utf8_encode($artist), utf8_encode($album), utf8_encode($genre), $length]);
                         $songsUploaded++;
+                        copy($DirectoryToScan."\\".$title.".mp3", ".\\music\\".$title.".mp3");
+                        //rename($DirectoryToScan."\\".$title.".mp3", ".\\music\\".$title.".mp3");
                         $message=$songsUploaded." new songs uploaded.";
                     }
                 }
@@ -119,14 +119,10 @@ class musiCallController extends Controller{
             $songTags=array();
 
             if(isset($ThisFileInfo['tags'])){
-                if(isset($tags['title'])){
-                    $title=$tags['title'];
-                    array_push($songTags, $title);
-                }else{
-                    $title=$songNames[$i];
-                    array_push($songTags, $title);
-                }
-
+                
+                $title=$songNames[$i];
+                array_push($songTags, $title);
+                
                 if(isset($tags['artist'])){
                     $artist=$tags['artist'];
                     array_push($songTags, $artist);
