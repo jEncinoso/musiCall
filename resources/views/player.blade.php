@@ -8,7 +8,7 @@
 	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <!-- own CSS -->
     <link rel="stylesheet" type="text/css" href="./css/style.css">
-
+    <script type="text/javascript" src="{{URL::asset('js/rs.speech.js-master/src/rs.speech.js')}}"></script>
 
     <title> musiCall</title>
 
@@ -156,6 +156,16 @@
           "<marquee id='trackInfo'>"+name+" - <span onclick=\"showFilteredSongs('artist','"+artist+"'), openNav();\">"+artist+" - <span onclick=\"showFilteredSongs('album','"+album+"'), openNav();\">"+album+" - <span onclick=\"showFilteredSongs('genre','"+genre+"'), openNav();\">"+genre+"</span></marquee>";
         }
 
+        function record(){
+              speechRs.rec_start('en-IN',function(final_transcript,interim_transcript){
+                console.log(final_transcript,interim_transcript);
+              });   
+              speechRs.on("play album Led Zeppelin",function(){ 
+                alert("Puta madre");
+              }); 
+              //https://www.youtube.com/watch?v=BmdZtjxFFlQ
+        }
+
     </script>
 
   	</head>
@@ -208,7 +218,7 @@
 
 			<div class="row align-items-center justify-content-center">
         <div class="mpMicrophone">
-          <input type="image" class="microImg" src="./images/microphone.png"/>
+          <input type="image" class="microImg" src="./images/microphone.png" onclick="record();"/>
 				</div>
       </div>
       <div class="row">
