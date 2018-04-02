@@ -1,11 +1,33 @@
 <table id="tableSongs" class="table table-responsive">
 	<tr>
-		<!-- ORDENAR -->
-		<th>Name</th>
-		<th>Artist</th>
-		<th>Album</th>
-		<th>Genre</th>
-		<th>Length</th>
+		<td >
+			<img id="refreshIcon" src="./images/refresh.png" onClick="showSongs();" vspace="10"/>
+		</td>
+		<td colspan="4">
+			<font size="5">{{$filter}}{{$filterName}}</font>
+		</td>
+	</tr>
+	<tr>
+		<th>Name
+			<img class="tableIcons" src="./images/orderDown.png" onClick="showOrderedSongs('down','name','{{$filter}}','{{$filterName}}');"/>
+			<img class="tableIcons" src="./images/orderUp.png" onClick="showOrderedSongs('up','name','{{$filter}}','{{$filterName}}');"/>
+		</th>
+		<th>Artist
+			<img class="tableIcons" src="./images/orderDown.png" onClick="showOrderedSongs('down','artist','{{$filter}}','{{$filterName}}');"/>
+			<img class="tableIcons" src="./images/orderUp.png" onClick="showOrderedSongs('up','artist','{{$filter}}','{{$filterName}}');"/>
+		</th>
+		<th>Album
+			<img class="tableIcons" src="./images/orderDown.png" onClick="showOrderedSongs('down','album','{{$filter}}','{{$filterName}}');"/>
+			<img class="tableIcons" src="./images/orderUp.png" onClick="showOrderedSongs('up','album','{{$filter}}','{{$filterName}}');"/>
+		</th>
+		<th>Genre
+			<img class="tableIcons" src="./images/orderDown.png" onClick="showOrderedSongs('down','genre','{{$filter}}','{{$filterName}}');"/>
+			<img class="tableIcons" src="./images/orderUp.png" onClick="showOrderedSongs('up','genre','{{$filter}}','{{$filterName}}');"/>
+		</th>
+		<th>Length
+			<img class="tableIcons" src="./images/orderDown.png" onClick="showOrderedSongs('down','length','{{$filter}}','{{$filterName}}');"/>
+			<img class="tableIcons" src="./images/orderUp.png" onClick="showOrderedSongs('up','length','{{$filter}}','{{$filterName}}');"/>
+		</th>
 	</tr>
 	<?php
 		$counter=1;
@@ -37,9 +59,9 @@
 			?>	
 			
 			<td id='{{$counter}}' title="{{$totalSongs}}" onClick='playClickedSong("{{$song->name}}","{{$counter}}"); closeNav();'>{{$song->name}}</td>
-			<td>{{$song->artist}}</td>
-			<td>{{$song->album}}</td>
-			<td>{{$song->genre}}</td>
+			<td onclick="showFilteredSongs('artist','{{$song->artist}}')">{{$song->artist}}</td>
+			<td onclick="showFilteredSongs('album','{{$song->album}}')">{{$song->album}}</td>
+			<td onclick="showFilteredSongs('genre','{{$song->genre}}')">{{$song->genre}}</td>
 			<td>{{$song->length}}</td>
 		</tr>
 	<?php

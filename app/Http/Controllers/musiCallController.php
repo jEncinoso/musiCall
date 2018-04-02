@@ -172,7 +172,64 @@ class musiCallController extends Controller{
 
     public function getSongs(Request $request){
         $songs=DB::select('SELECT * FROM t_songs;');
-        return view('tableSongs', ['songs'=>$songs]);
+        return view('tableSongs', ['songs'=>$songs, 'filter'=>"All", 'filterName'=>""]);
     }
 
+    public function getFilteredSong(Request $request){
+        $filter=$request->filter;
+        $name=$request->name;
+        $songs=DB::select('SELECT * FROM t_songs WHERE '.$filter.'=?;',[$name]);
+        $filter=strtoupper($filter[0]).substr($filter,1);
+        return view('tableSongs', ['songs'=>$songs, 'filter'=>$filter." - ", 'filterName'=>$name]);
+    }
+
+    public function showOrderedSongs(Request $request){
+        $order=$request->order;
+        $field=$request->field;
+        $filter=$request->filter;
+        if(strpos($filter, "-")>0){
+            $filter=explode(" ",$filter);
+            $filter=$filter[0];
+        }
+
+
+        $name=$request->name;
+
+        if($order=="up"){
+            if($field!="length"){    
+                if($filter!="All"){
+                    var_dump($filter);
+                    $songs=DB::select('SELECT * FROM t_songs WHERE '.$filter.'=? ORDER BY '.$field.' ASC;',[$name]);
+                }else{
+                    $songs=DB::select('SELECT * FROM t_songs ORDER BY '.$field.' ASC;');
+                }
+            }else{
+                if($filter!="All"){
+                    $songs=DB::select('SELECT * FROM t_songs WHERE '.$filter.'=? ORDER BY '.$field.' ASC;',[$name]);
+                }else{
+                    $songs=DB::select('SELECT * FROM t_songs ORDER BY '.$field.' ASC;');
+                }
+            }
+        }else{
+            if($field!="length"){  
+                if($filter!="All"){
+                    $songs=DB::select('SELECT * FROM t_songs WHERE '.$filter.'=? ORDER BY '.$field.' DESC;',[$name]);
+                }else{
+                    $songs=DB::select('SELECT * FROM t_songs ORDER BY '.$field.' DESC;');
+                }
+            }else{
+                if($filter!="All"){
+                    $songs=DB::select('SELECT * FROM t_songs WHERE '.$filter.'=? ORDER BY '.$field.' DESC;',[$name]);
+                }else{
+                    $songs=DB::select('SELECT * FROM t_songs ORDER BY '.$field.' DESC;');
+                }
+            }
+        }
+
+        if($filter!="All"){
+            return view('tableSongs', ['songs'=>$songs, 'filter'=>$filter." - ", 'filterName'=>$name]);
+        }else{
+            return view('tableSongs', ['songs'=>$songs, 'filter'=>$filter, 'filterName'=>$name]);
+        }
+    }
 }

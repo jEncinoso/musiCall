@@ -71,6 +71,12 @@ hr {
     font-size: 60px;
 }
 
-#mp3{
+#refreshIcon{
+    width:25px;
+    height:25px;
+}
 
+.tableIcons{
+    width:20px;
+    height:20px;
 }

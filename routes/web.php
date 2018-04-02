@@ -17,5 +17,5 @@ Route::any('/', function () {
 
 Route::post('uploadSongs', 'musiCallController@uploadSongs');
 Route::post('getSongs', 'musicallController@getSongs');
-
-//METODO ORDENAR?
+Route::post('getFilteredSong', 'musicallController@getFilteredSong');
+Route::post('showOrderedSongs', 'musicallController@showOrderedSongs');
