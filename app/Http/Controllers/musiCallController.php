@@ -167,11 +167,12 @@ class musiCallController extends Controller{
                 array_push($songsFullTags, $songTags);
             }
         }
-         return $songsFullTags;
+        return $songsFullTags;
     }
 
     public function getSongs(Request $request){
         $songs=DB::select('SELECT * FROM t_songs;');
         return view('tableSongs', ['songs'=>$songs]);
     }
+
 }

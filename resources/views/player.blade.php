@@ -22,90 +22,101 @@
         function showSongs(){
          	var xhr = new XMLHttpRequest();
             xhr.onreadystatechange = function() {
-                if (this.readyState == 4 && this.status == 200) {
-                        document.getElementById('mpSongs').innerHTML=this.responseText;
-                    }
-                };
+              if (this.readyState == 4 && this.status == 200) {
+                document.getElementById('mpSongs').innerHTML=this.responseText;
+              }
+            };
 
             xhr.open("POST", 'getSongs', true);
             xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-            var parametros = "_token="+token;
-            xhr.send(parametros);   
+            var parameters = "_token="+token;
+            xhr.send(parameters);   
         }
 
         function playClickedSong(song, track){
-        	document.getElementById('mp3').title=track;
-        	document.getElementById('mp3').src="./music/"+song+".mp3";
+        	mp3.title=track;
+        	mp3.src="./music/"+song+".mp3";
         	showSongData(track);
-        	document.getElementById("playIcon").src="./images/play.png";
-        	document.getElementById('mp3').play();
+        	document.getElementById("playIcon").src="./images/pause.png";
+        	mp3.play();
         }
 
         function playSong(){
+          //set first song of the list as default
+          if(mp3.title==""){
+            mp3.title="1";
+          }
+          var currentTime=mp3.currentTime;
+
         	var iconPath=document.getElementById("playIcon").src;
         	iconPath=iconPath.split("/");
-        	if(iconPath[iconPath.length-1]=="play.png"){
+
+        	if(iconPath[iconPath.length-1]=="play.png" ){
         		document.getElementById("playIcon").src="./images/pause.png";
-        		document.getElementById('mp3').pause();
-       		}else if(iconPath[iconPath.length-1]=="pause.png"){
-       			document.getElementById('mp3').playing();
-       		}else{
-	        	if(document.getElementById("mp3").title==""){
-	        		document.getElementById("mp3").title="1";
-	        	}
-	        	var actualTrack=document.getElementById("mp3").title;
-	        	var song=document.getElementById(actualTrack).innerHTML;
-	        	document.getElementById('mp3').src="./music/"+encodeURIComponent(song)+".mp3";
-	        	showSongData(actualTrack);
-	        	document.getElementById("playIcon").src="./images/play.png";
-	        	document.getElementById('mp3').play();
-	        }
-        }
+            var actualTrack=mp3.title;
+            var song=document.getElementById(actualTrack).innerHTML;
+            mp3.src="./music/"+encodeURIComponent(song)+".mp3";
+            if(currentTime>0){
+              mp3.currentTime=currentTime;
+              mp3.play();
+              trackInfo.start();
+            }else{
+              showSongData(actualTrack);
+              trackInfo=document.getElementById('trackInfo');
+              mp3.play();
+       		  }
+          }else if(iconPath[iconPath.length-1]=="pause.png"){
+            document.getElementById("playIcon").src="./images/play.png";
+       			mp3.pause();
+            trackInfo.stop();
+       		}
+	      }
 
         function nextSong(){
-        	var actualTrack=document.getElementById("mp3").title;
+        	var actualTrack=mp3.title;
 	        actualTrack++;
         	if(document.getElementById(actualTrack)!=null){
-	        	var actualTrack=document.getElementById("mp3").title;
+	        	var actualTrack=mp3.title;
 	        	actualTrack++;
-	        	document.getElementById("mp3").title=actualTrack;
+	        	mp3.title=actualTrack;
         	}else{
         		actualTrack=1;
-	        	document.getElementById("mp3").title=actualTrack;
+	        	mp3.title=actualTrack;
         	}
         	var song=document.getElementById(parseInt(actualTrack)).innerHTML;
-        	document.getElementById('mp3').src="./music/"+encodeURIComponent(song)+".mp3";
+        	mp3.src="./music/"+encodeURIComponent(song)+".mp3";
         	showSongData(actualTrack);
-        	document.getElementById("playIcon").src="./images/play.png";
-        	document.getElementById('mp3').play();
+          trackInfo=document.getElementById('trackInfo');
+        	document.getElementById("playIcon").src="./images/pause.png";
+        	mp3.play();
         }
 
         function prevSong(){
-        	var actualTrack=document.getElementById("mp3").title;
+        	var actualTrack=mp3.title;
 	        actualTrack--;
         	if(document.getElementById(actualTrack)!=null){
-	        	var actualTrack=document.getElementById("mp3").title;
+	        	var actualTrack=mp3.title;
 	        	actualTrack--;
-	        	document.getElementById("mp3").title=actualTrack;
+	        	mp3.title=actualTrack;
         	}else{
         		actualTrack=parseInt(document.getElementById("1").title);
-	        	document.getElementById("mp3").title=actualTrack;
+	        	mp3.title=actualTrack;
         	}
         	var song=document.getElementById(parseInt(actualTrack)).innerHTML;
-        	document.getElementById('mp3').src="./music/"+encodeURIComponent(song)+".mp3";
+        	mp3.src="./music/"+encodeURIComponent(song)+".mp3";
         	showSongData(actualTrack);
-        	document.getElementById("playIcon").src="./images/play.png";
-        	document.getElementById('mp3').play();
+          trackInfo=document.getElementById('trackInfo');
+        	document.getElementById("playIcon").src="./images/pause.png";
+        	mp3.play();
         }
 
         function showSongData(track){
         	document.getElementById("message").innerHTML="";
-
-        	var name=document.getElementById("h"+track+1).title;
-        	var artist=document.getElementById("h"+track+2).title;
-        	var album=document.getElementById("h"+track+3).title;
-        	var genre=document.getElementById("h"+track+4).title;
-        	document.getElementById("nowPlaying").innerHTML="<marquee>"+name+" - "+artist+" - "+album+" - "+genre+"</marquee>";
+        	var name=document.getElementById("s"+track+1).title;
+        	var artist=document.getElementById("s"+track+2).title;
+        	var album=document.getElementById("s"+track+3).title;
+        	var genre=document.getElementById("s"+track+4).title;
+        	document.getElementById("nowPlaying").innerHTML="<marquee id='trackInfo'>"+name+" - "+artist+" - "+album+" - "+genre+"</marquee>";
         }
 
     </script>
@@ -169,7 +180,7 @@
 			<div class="row align-items-center justify-content-center">
                 <div class="mpButtons">
                     <input type="image" class="playImg col ml-3" src="./images/back.png" onClick="prevSong();"/>
-                    <input type="image" id="playIcon" class="playImg col ml-3" src="./images/play1.png" onClick="playSong();"/>
+                    <input type="image" id="playIcon" class="playImg col ml-3" src="./images/play.png" onClick="playSong();"/>
                   	<input type="image" class="playImg col ml-3" src="./images/next.png" onClick="nextSong();"/>
                	</div>
             </div>
@@ -193,15 +204,19 @@
             </div>
             <div class="row">
            	 	<hr>
-              	<audio id="mp3" title="" src="" class="col-md-12" controls controlsList="nodownload"></audio>
+              	<audio id="mp3" title="" src="" class="col-md-12" controls controlsList="nodownload" onended="nextSong();"></audio>
+                <script type="text/javascript">
+                  var mp3=document.getElementById("mp3");
+                  var trackInfo;
+                </script>
 
               	<br><br>
             	<!--
             	<div> 
-					<button onclick="document.getElementById('mp3').play()">Play</button> 
-					<button onclick="document.getElementById('mp3').pause()">Pause</button> 
-					<button onclick="document.getElementById('mp3').volume += 0.1">Vol+ </button> 
-					<button onclick="document.getElementById('mp3').volume -= 0.1">Vol- </button> 
+					<button onclick="mp3.play()">Play</button> 
+					<button onclick="mp3.pause()">Pause</button> 
+					<button onclick="mp3.volume += 0.1">Vol+ </button> 
+					<button onclick="mp3.volume -= 0.1">Vol- </button> 
 			  	</div>
 				-->
            	</div>
