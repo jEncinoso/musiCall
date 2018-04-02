@@ -42,10 +42,13 @@
         }
 
         function playSong(){
-        	if(document.getElementById("playIcon").src=="./images/play.png"){
-        		alert("jelous");
+        	var iconPath=document.getElementById("playIcon").src;
+        	iconPath=iconPath.split("/");
+        	if(iconPath[iconPath.length-1]=="play.png"){
         		document.getElementById("playIcon").src="./images/pause.png";
         		document.getElementById('mp3').pause();
+       		}else if(iconPath[iconPath.length-1]=="pause.png"){
+       			document.getElementById('mp3').playing();
        		}else{
 	        	if(document.getElementById("mp3").title==""){
 	        		document.getElementById("mp3").title="1";
@@ -103,13 +106,6 @@
         	var album=document.getElementById("h"+track+3).title;
         	var genre=document.getElementById("h"+track+4).title;
         	document.getElementById("nowPlaying").innerHTML="<marquee>"+name+" - "+artist+" - "+album+" - "+genre+"</marquee>";
-        }
-
-        function setIcon(){
-        	if(document.getElementById("playIcon").src=="./images/play.png"){
-        		document.getElementById("playIcon").src="./images/pause.png";
-        		document.getElementById('mp3').pause();
-       		}
         }
 
     </script>
@@ -173,7 +169,7 @@
 			<div class="row align-items-center justify-content-center">
                 <div class="mpButtons">
                     <input type="image" class="playImg col ml-3" src="./images/back.png" onClick="prevSong();"/>
-                    <input type="image" id="playIcon" class="playImg col ml-3" src="./images/play.png" onClick="playSong();"/>
+                    <input type="image" id="playIcon" class="playImg col ml-3" src="./images/play1.png" onClick="playSong();"/>
                   	<input type="image" class="playImg col ml-3" src="./images/next.png" onClick="nextSong();"/>
                	</div>
             </div>
