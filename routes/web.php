@@ -18,4 +18,4 @@ Route::any('/', function () {
 Route::post('uploadSongs', 'musiCallController@uploadSongs');
 Route::post('getSongs', 'musicallController@getSongs');
 Route::post('getFilteredSong', 'musicallController@getFilteredSong');
-Route::post('showOrderedSongs', 'musicallController@showOrderedSongs');
+Route::post('getOrderedSongs', 'musicallController@getOrderedSongs');

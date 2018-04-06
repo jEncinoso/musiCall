@@ -15,6 +15,9 @@
     <script type="text/javascript">
         var token="{{ csrf_token() }}";
 
+        /**********************************************************/
+        /*               Song List/Database Methods                / 
+        /**********************************************************/
         function initiate(){
         	showSongs();
         }
@@ -59,17 +62,19 @@
 
           mp3.title="";
 
-          xhr.open("POST", 'showOrderedSongs', true);
+          xhr.open("POST", 'getOrderedSongs', true);
           xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
           var parameters = "_token="+token+"&order="+order+"&field="+field+"&filter="+filter+"&name="+name;;
           xhr.send(parameters);  
         }
 
+        /**********************************************************/
+        /*             Methods called by clicking                  / 
+        /**********************************************************/
         function playClickedSong(song, track){
         	mp3.title=track;
         	mp3.src="./music/"+song+".mp3";
         	showSongData(track);
-          trackInfo=document.getElementById('trackInfo');
         	document.getElementById("playIcon").src="./images/pause.png";
         	mp3.play();
         }
@@ -79,6 +84,7 @@
           if(mp3.title==""){
             mp3.title="1";
           }
+
           var currentTime=mp3.currentTime;
 
         	var iconPath=document.getElementById("playIcon").src;
@@ -101,11 +107,22 @@
        		  }
 
           }else if(iconPath[iconPath.length-1]=="pause.png"){
-            document.getElementById("playIcon").src="./images/play.png";
-       			mp3.pause();
-            trackInfo.stop();
-       		}
+             pauseSong();
+          }
 	      }
+
+        function pauseSong(){
+            document.getElementById("playIcon").src="./images/play.png";
+            mp3.pause();
+            trackInfo.stop();
+        }
+
+        function stopSong(){
+            document.getElementById("playIcon").src="./images/play.png";
+            mp3.pause();
+            mp3.currentTime=0;
+            document.getElementById("nowPlaying").innerHTML="";
+        }
 
         function nextSong(){
         	var actualTrack=mp3.title;
@@ -153,19 +170,72 @@
         	var genre=document.getElementById("s"+track+4).title;
 
         	document.getElementById("nowPlaying").innerHTML=
-          "<marquee id='trackInfo'>"+name+" - <span onclick=\"showFilteredSongs('artist','"+artist+"'), openNav();\">"+artist+" - <span onclick=\"showFilteredSongs('album','"+album+"'), openNav();\">"+album+" - <span onclick=\"showFilteredSongs('genre','"+genre+"'), openNav();\">"+genre+"</span></marquee>";
+          "<marquee id='trackInfo'>"+name+" - <span onclick=\"showFilteredSongs('artist','"+artist+"'), openNav();\">"+artist+"</span>  - <span onclick=\"showFilteredSongs('album','"+album+"'), openNav();\">"+album+"</span> - <span onclick=\"showFilteredSongs('genre','"+genre+"'), openNav();\">"+genre+"</span></marquee>";
         }
 
-        function record(){
-              speechRs.rec_start('en-IN',function(final_transcript,interim_transcript){
-                console.log(final_transcript,interim_transcript);
-              });   
-              speechRs.on("play album Led Zeppelin",function(){ 
-                alert("Puta madre");
-              }); 
-              //https://www.youtube.com/watch?v=BmdZtjxFFlQ
-        }
+        /**********************************************************/
+        /*             Methods called by microphone                / 
+        /**********************************************************/
+        function recordAction(){
+          //English Voice Commands
+          speechRs.rec_start('en-IN',function(final_transcript,interim_transcript){
+            console.log(final_transcript,interim_transcript);
+          });   
 
+          speechRs.on("play song",function(){ 
+            playSong();
+          }); 
+
+          speechRs.on("pause song",function(){ 
+            pauseSong();
+          }); 
+
+          speechRs.on("stop song",function(){ 
+            stopSong();
+          }); 
+
+          speechRs.on("next song",function(){ 
+            nextSong();
+          }); 
+
+          speechRs.on("previous song",function(){ 
+            prevSong();
+          }); 
+
+          /*speechRs.on("previous artist",function(){ 
+            var name="";
+            showFilteredSongs("artist", name);
+          }); */
+              
+              
+          //Spanish Voice Commands
+
+          speechRs.rec_start('es-ES',function(final_transcript,interim_transcript){
+            console.log(final_transcript,interim_transcript);
+          });   
+
+          speechRs.on("reproducir canción",function(){ 
+            playSong();
+          }); 
+
+          speechRs.on("pausar canción",function(){ 
+            pauseSong();
+          }); 
+
+          speechRs.on("stop canción",function(){ 
+            stopSong();
+          });
+
+          speechRs.on("siguiente canción",function(){ 
+            nextSong();
+          }); 
+
+          speechRs.on("canción anterior",function(){ 
+            prevSong();
+          });
+
+          //https://www.youtube.com/watch?v=BmdZtjxFFlQ
+        }
     </script>
 
   	</head>
@@ -218,7 +288,7 @@
 
 			<div class="row align-items-center justify-content-center">
         <div class="mpMicrophone">
-          <input type="image" class="microImg" src="./images/microphone.png" onclick="record();"/>
+          <input type="image" class="microImg" src="./images/microphone.png" onclick="recordAction();"/>
 				</div>
       </div>
       <div class="row">

@@ -22,11 +22,11 @@ class musiCallController extends Controller{
                     for($i=0;$i<count($songsFullTags);$i++){
                         $exists=false;
 
-                        $title=$songsFullTags[$i][0];
+                        $title=$songsFullTags[$i][0][0];
                         $artist=$songsFullTags[$i][1][0];
                         $album=$songsFullTags[$i][2][0];
                         $genre=$songsFullTags[$i][3][0];
-                        $length=$songsFullTags[$i][4];
+                        $length=$songsFullTags[$i][4][0];
                             
                         $songs=DB::select('SELECT * FROM t_songs;');
 
@@ -84,17 +84,17 @@ class musiCallController extends Controller{
 
         $files=scandir($DirectoryToScan);
 
-        //array with real path (url);
-        $realPath=array();
+        //array with real path (url);. Ex: [url/name.mp3, url/name.mp3, url/name.mp3, ...]
+        $realPath=array(); 
 
-        //array with songNames
-        $songNames=array();
+        //array with songNames. Ex: [name, name, name, ...]
+        $songNames=array(); 
 
-        //array with tags per song
-        $songTags=array();
+        //array with tags per song. Ex: [title, artis, album, ...]
+        $songTags=array();  
 
-        //array with all songs including tags
-        $songsFullTags=array();
+        //array with all songs including tags. Ex: [songTags, songTags, songTags, ...]
+        $songsFullTags=array(); 
 
 
         for($i=0;$i<count($files);$i++){
@@ -107,7 +107,7 @@ class musiCallController extends Controller{
 
             $name=substr($name,0,strlen($name)-4);
             if($format[count($format)-1] == "mp3"){
-                array_push($songNames, $name);
+                array_push($songNames, $name);          
                 array_push($realPath, $FullFileName);
             }
         }
@@ -125,7 +125,7 @@ class musiCallController extends Controller{
 
             if(isset($ThisFileInfo['tags'])){
                 
-                $title=$songNames[$i];
+                $title=array($songNames[$i]);
                 array_push($songTags, $title);
                 
                 if(isset($tags['artist'])){
@@ -153,7 +153,7 @@ class musiCallController extends Controller{
                 }
 
                 if(isset($ThisFileInfo["playtime_string"])){
-                    $length=$ThisFileInfo["playtime_string"];
+                    $length=array($ThisFileInfo["playtime_string"]);
                     array_push($songTags, $length);
                 }else if(isset($ThisFileInfo["playtime_seconds"])){
                     $time=$ThisFileInfo["playtime_seconds"]/60;
@@ -183,46 +183,29 @@ class musiCallController extends Controller{
         return view('tableSongs', ['songs'=>$songs, 'filter'=>$filter." - ", 'filterName'=>$name]);
     }
 
-    public function showOrderedSongs(Request $request){
+    public function getOrderedSongs(Request $request){
         $order=$request->order;
         $field=$request->field;
         $filter=$request->filter;
+
         if(strpos($filter, "-")>0){
             $filter=explode(" ",$filter);
             $filter=$filter[0];
         }
 
-
         $name=$request->name;
 
         if($order=="up"){
-            if($field!="length"){    
-                if($filter!="All"){
-                    var_dump($filter);
-                    $songs=DB::select('SELECT * FROM t_songs WHERE '.$filter.'=? ORDER BY '.$field.' ASC;',[$name]);
-                }else{
-                    $songs=DB::select('SELECT * FROM t_songs ORDER BY '.$field.' ASC;');
-                }
+            if($filter!="All"){
+                $songs=DB::select('SELECT * FROM t_songs WHERE '.$filter.'=? ORDER BY '.$field.' ASC;',[$name]);
             }else{
-                if($filter!="All"){
-                    $songs=DB::select('SELECT * FROM t_songs WHERE '.$filter.'=? ORDER BY '.$field.' ASC;',[$name]);
-                }else{
-                    $songs=DB::select('SELECT * FROM t_songs ORDER BY '.$field.' ASC;');
-                }
+                $songs=DB::select('SELECT * FROM t_songs ORDER BY '.$field.' ASC;');
             }
         }else{
-            if($field!="length"){  
-                if($filter!="All"){
-                    $songs=DB::select('SELECT * FROM t_songs WHERE '.$filter.'=? ORDER BY '.$field.' DESC;',[$name]);
-                }else{
-                    $songs=DB::select('SELECT * FROM t_songs ORDER BY '.$field.' DESC;');
-                }
+            if($filter!="All"){
+                $songs=DB::select('SELECT * FROM t_songs WHERE '.$filter.'=? ORDER BY '.$field.' DESC;',[$name]);
             }else{
-                if($filter!="All"){
-                    $songs=DB::select('SELECT * FROM t_songs WHERE '.$filter.'=? ORDER BY '.$field.' DESC;',[$name]);
-                }else{
-                    $songs=DB::select('SELECT * FROM t_songs ORDER BY '.$field.' DESC;');
-                }
+                $songs=DB::select('SELECT * FROM t_songs ORDER BY '.$field.' DESC;');
             }
         }
 

@@ -29,6 +29,7 @@
 			<img class="tableIcons" src="./images/orderUp.png" onClick="showOrderedSongs('up','length','{{$filter}}','{{$filterName}}');"/>
 		</th>
 	</tr>
+
 	<?php
 		$counter=1;
 		$counterHidden=1;
@@ -59,10 +60,11 @@
 			?>	
 			
 			<td id='{{$counter}}' title="{{$totalSongs}}" onClick='playClickedSong("{{$song->name}}","{{$counter}}"); closeNav();'>{{$song->name}}</td>
-			<td onclick="showFilteredSongs('artist','{{$song->artist}}')">{{$song->artist}}</td>
-			<td onclick="showFilteredSongs('album','{{$song->album}}')">{{$song->album}}</td>
-			<td onclick="showFilteredSongs('genre','{{$song->genre}}')">{{$song->genre}}</td>
+			<td onClick="showFilteredSongs('artist','{{$song->artist}}')">{{$song->artist}}</td>
+			<td onClick="showFilteredSongs('album','{{$song->album}}')">{{$song->album}}</td>
+			<td onClick="showFilteredSongs('genre','{{$song->genre}}')">{{$song->genre}}</td>
 			<td>{{$song->length}}</td>
+			
 		</tr>
 	<?php
 		$counter++;
