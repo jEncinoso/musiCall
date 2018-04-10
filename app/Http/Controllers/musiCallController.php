@@ -9,66 +9,82 @@ use DB;
 class musiCallController extends Controller{
 
     public function uploadSongs(Request $request){
+        $language=$request->language;
+        $request->session()->put('language', $language);
+
         $DirectoryToScan=$request->mpPath;
         if($DirectoryToScan!=""){
             if(is_dir($DirectoryToScan)){
                 $songsFullTags=$this->getFullTags($DirectoryToScan);
-
-                /////////////////////////////////////////////////////
+                
                 $exists;
                 $songsUploaded=0;
-
                 if(count($songsFullTags)>0){
                     for($i=0;$i<count($songsFullTags);$i++){
-                        $exists=false;
 
-                        $title=$songsFullTags[$i][0][0];
-                        $artist=$songsFullTags[$i][1][0];
-                        $album=$songsFullTags[$i][2][0];
-                        $genre=$songsFullTags[$i][3][0];
-                        $length=$songsFullTags[$i][4][0];
-                            
-                        $songs=DB::select('SELECT * FROM t_songs;');
+                        $title=$songsFullTags[$i][0];
+                        $artist=$songsFullTags[$i][1];
+                        $album=$songsFullTags[$i][2];
+                        $genre=$songsFullTags[$i][3];
+                        $length=$songsFullTags[$i][4];
 
-                        if(count($songs)>0){   
-                            for($j=0;$j<count($songs);$j++){
-                                if($title == $songs[$j]->name && $artist == $songs[$j]->artist){
-                                    $exists=true;
-                                }
-                            }
-                            if($exists==true){
-                                $message=$songsUploaded." new songs uploaded.";
-                            }else{
-                                DB::insert('INSERT INTO t_songs (name, artist, album, genre, length) VALUES (?,?,?,?,?)',[utf8_encode($title), utf8_encode($artist), utf8_encode($album), utf8_encode($genre), $length]);
-                                $songsUploaded++;
+                        $song=DB::select('SELECT * FROM t_songs WHERE name=? AND artist=?',[$title, $artist]);
+
+                        if(!count($song)>0){
+                            if(DB::insert('INSERT INTO t_songs (name, artist, album, genre, length) VALUES (?,?,?,?,?)',[utf8_encode($title), utf8_encode($artist), utf8_encode($album), utf8_encode($genre), $length])==true){
+
                                 //Method to move a file from one directory to another. rename(origin/name, destiny/name)
                                 copy($DirectoryToScan."\\".$title.".mp3", ".\\music\\".$title.".mp3");
+
                                 //Method to move a file from one directory to another. rename(origin/name, destiny/name)
-                                //rename($DirectoryToScan."\\".$title.".mp3", ".\\music\\".$title.".mp3");
-                                $message=$songsUploaded." new songs uploaded.";
+                                //rename($DirectoryToScan."\\".$title.".mp3", ".\\music\\".$title.".mp3");  
+
+                                $songsUploaded++;   
                             }
-                        }else{
-                            DB::insert('INSERT INTO t_songs (name, artist, album, genre, length) VALUES (?,?,?,?,?)',[utf8_encode($title), utf8_encode($artist), utf8_encode($album), utf8_encode($genre), $length]);
-                            $songsUploaded++;
-                            copy($DirectoryToScan."\\".$title.".mp3", ".\\music\\".$title.".mp3");
-                            //rename($DirectoryToScan."\\".$title.".mp3", ".\\music\\".$title.".mp3");
-                            $message=$songsUploaded." new songs uploaded.";
                         }
                     }
+
+                    switch($language){
+                        case "English":
+                            $message=$songsUploaded." new songs uploaded.";
+                            break;
+                        case "Español":
+                            $message=$songsUploaded." canciones nuevas subidas.";
+                            break;
+                    }
+
                 }else{
-                    $message="0 songs found in ".$DirectoryToScan;
+                    switch($language){
+                        case "English":
+                            $message="0 songs found in ".$DirectoryToScan;
+                            break;
+                        case "Español":
+                            $message="0 canciones encontradas en ".$DirectoryToScan;
+                            break;
+                    }
                 }
-                return view('player',['message'=>$message]);
-                /////////////////////////////////////////////////////
             }else{
-                $error=$DirectoryToScan." is not a folder.";
-                return view('player',['error'=>$error]);
+                switch($language){
+                    case "English":
+                        $message=$DirectoryToScan." is not a folder.";
+                        break;
+                    case "Español":
+                        $message=$DirectoryToScan." no es un directorio.";
+                        break;
+                }
             }
         }else{
-            $error="Write a music path.";
-            return view('player',['error'=>$error]);
+            switch($language){
+                case "English":
+                    $message="Write a music path.";
+                    break;
+                case "Español":
+                    $message="Introduza la ruta a un directorio.";
+                    break;
+            }
         }
-    }
+        return view('player',['message'=>$message]);
+    } 
 
     private function getFullTags($DirectoryToScan){
         include(app_path().'/id3/getid3/getid3.php');
@@ -77,7 +93,7 @@ class musiCallController extends Controller{
 
             You should do something like this:
 
-            $id3 = new getID3 = $id3 = new \getID3
+            $id3 = new getID3 | $id3 = new \getID3
         */
         
         $getID3 = new \getID3;
@@ -125,42 +141,39 @@ class musiCallController extends Controller{
 
             if(isset($ThisFileInfo['tags'])){
                 
-                $title=array($songNames[$i]);
+                $title=$songNames[$i];
                 array_push($songTags, $title);
                 
                 if(isset($tags['artist'])){
-                    $artist=$tags['artist'];
+                    $artist=$tags['artist'][0];
+
                     array_push($songTags, $artist);
                 }else{
-                    $artist=array('unknown artist');
+                    $artist='unknown artist';
                     array_push($songTags, $artist);
                 }
 
                 if(isset($tags['album'])){
-                    $album=$tags['album'];
+                    $album=$tags['album'][0];;
                     array_push($songTags, $album);
                 }else{
-                    $album=array("unknown album");
+                    $album="unknown album";
                     array_push($songTags, $album);
                 }
 
                 if(isset($tags['genre'])){
-                    $genre=$tags['genre'];
+                    $genre=$tags['genre'][0];;
                     array_push($songTags, $genre);
                 }else{
-                    $genre=array('unknown genre');
+                    $genre='unknown genre';
                     array_push($songTags, $genre);
                 }
 
                 if(isset($ThisFileInfo["playtime_string"])){
-                    $length=array($ThisFileInfo["playtime_string"]);
+                    $length=$ThisFileInfo["playtime_string"];
                     array_push($songTags, $length);
                 }else if(isset($ThisFileInfo["playtime_seconds"])){
-                    $time=$ThisFileInfo["playtime_seconds"]/60;
-                    $mins=(int)$time;
-                    $secs=($time-$mins)*60;
-                    $secs=(int)$secs;
-                    $length=$mins.":".$secs;
+                    $length=$this->getSongLength($ThisFileInfo["playtime_seconds"]/60);
                     array_push($songTags, $length);
                 }
 
@@ -168,6 +181,14 @@ class musiCallController extends Controller{
             }
         }
         return $songsFullTags;
+    }
+
+    private function getSongLength($time){
+        $mins=(int)$time;
+        $secs=($time-$mins)*60;
+        $secs=(int)$secs;
+        $length=$mins.":".$secs;
+        return $length;
     }
 
     public function getSongs(Request $request){

@@ -16,6 +16,47 @@
         var token="{{ csrf_token() }}";
 
         /**********************************************************/
+        /*                       UI Methods                        / 
+        /**********************************************************/
+        function openNav() {
+          document.getElementById("myNav").style.width = "100%";
+        }
+             
+        function closeNav() {
+          document.getElementById("myNav").style.width = "0%";
+        }
+        /**********************************************************/
+        /*                    Language Methods                     / 
+        /**********************************************************/
+        function changeLanguage(language){
+
+          switch(language){
+            case "English":
+              document.getElementById("mpPath").placeholder="Music Path";
+              document.getElementById("uploadSongsButton").innerHTML="Upload Songs";
+              document.getElementById("thName").innerHTML="Name";
+              document.getElementById("thArtist").innerHTML="Artist";
+              document.getElementById("thAlbum").innerHTML="Album";
+              document.getElementById("thGenre").innerHTML="Genre";
+              document.getElementById("thLength").innerHTML="Length";
+              break;
+
+            case "Español":
+              document.getElementById("mpPath").placeholder="Ruta de la música";
+              document.getElementById("uploadSongsButton").innerHTML="Subir canciones";
+              document.getElementById("thName").innerHTML="Nombre";
+              document.getElementById("thArtist").innerHTML="Artista";
+              document.getElementById("thAlbum").innerHTML="Album";
+              document.getElementById("thGenre").innerHTML="Género";
+              document.getElementById("thLength").innerHTML="Duración";
+
+              //Form language value
+              document.getElementById("hLanguage").value="Español";
+              break;
+          }
+        }
+
+        /**********************************************************/
         /*               Song List/Database Methods                / 
         /**********************************************************/
         function initiate(){
@@ -30,9 +71,11 @@
             }
           };
 
+          var language=document.getElementById("hLanguage").value;
+
           xhr.open("POST", 'getSongs', true);
           xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-          var parameters = "_token="+token;
+          var parameters = "_token="+token+"&language="+language;
           xhr.send(parameters);   
         }
 
@@ -45,10 +88,11 @@
           };
 
           mp3.title="";
+          var language=document.getElementById('selectLanguage').value;
 
           xhr.open("POST", 'getFilteredSong', true);
           xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-          var parameters = "_token="+token+"&filter="+filter+"&name="+name;
+          var parameters = "_token="+token+"&filter="+filter+"&name="+name+"&language="+language;
           xhr.send(parameters);   
         }
 
@@ -61,15 +105,16 @@
           };
 
           mp3.title="";
+          var language=document.getElementById('selectLanguage').value;
 
           xhr.open("POST", 'getOrderedSongs', true);
           xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-          var parameters = "_token="+token+"&order="+order+"&field="+field+"&filter="+filter+"&name="+name;;
+          var parameters = "_token="+token+"&order="+order+"&field="+field+"&filter="+filter+"&name="+name+"&language="+language;
           xhr.send(parameters);  
         }
 
         /**********************************************************/
-        /*             Methods called by clicking                  / 
+        /*                Methods called by clicking               / 
         /**********************************************************/
         function playClickedSong(song, track){
         	mp3.title=track;
@@ -105,23 +150,22 @@
               trackInfo=document.getElementById('trackInfo');
               mp3.play();
        		  }
-
           }else if(iconPath[iconPath.length-1]=="pause.png"){
              pauseSong();
           }
 	      }
 
         function pauseSong(){
-            document.getElementById("playIcon").src="./images/play.png";
-            mp3.pause();
-            trackInfo.stop();
+          document.getElementById("playIcon").src="./images/play.png";
+          mp3.pause();
+          trackInfo.stop();
         }
 
         function stopSong(){
-            document.getElementById("playIcon").src="./images/play.png";
-            mp3.pause();
-            mp3.currentTime=0;
-            document.getElementById("nowPlaying").innerHTML="";
+          document.getElementById("playIcon").src="./images/play.png";
+          mp3.pause();
+          mp3.currentTime=0;
+          document.getElementById("nowPlaying").innerHTML="";
         }
 
         function nextSong(){
@@ -174,67 +218,70 @@
         }
 
         /**********************************************************/
-        /*             Methods called by microphone                / 
+        /*               Methods called by microphone              / 
         /**********************************************************/
         function recordAction(){
-          //English Voice Commands
-          speechRs.rec_start('en-IN',function(final_transcript,interim_transcript){
-            console.log(final_transcript,interim_transcript);
-          });   
+          var language = document.getElementById("selectLanguage").value;
+          if(language == "English"){
+            //English Voice Commands
+            speechRs.rec_start('en-IN',function(final_transcript,interim_transcript){
+              console.log(final_transcript,interim_transcript);
+            });   
 
-          speechRs.on("play song",function(){ 
-            playSong();
-          }); 
+            speechRs.on("play song",function(){ 
+              playSong();
+            }); 
 
-          speechRs.on("pause song",function(){ 
-            pauseSong();
-          }); 
+            speechRs.on("pause",function(){ 
+              pauseSong();
+            }); 
 
-          speechRs.on("stop song",function(){ 
-            stopSong();
-          }); 
+            speechRs.on("stop",function(){ 
+              stopSong();
+            }); 
 
-          speechRs.on("next song",function(){ 
-            nextSong();
-          }); 
+            speechRs.on("next",function(){ 
+              nextSong();
+            }); 
 
-          speechRs.on("previous song",function(){ 
-            prevSong();
-          }); 
+            speechRs.on("back",function(){ 
+              prevSong();
+            }); 
 
-          /*speechRs.on("previous artist",function(){ 
-            var name="";
-            showFilteredSongs("artist", name);
-          }); */
-              
-              
-          //Spanish Voice Commands
+            /*speechRs.on("play artist",function(){ 
+              var name="";
+              showFilteredSongs("artist", name);
+            }); */
 
-          speechRs.rec_start('es-ES',function(final_transcript,interim_transcript){
-            console.log(final_transcript,interim_transcript);
-          });   
+          }else if(language = "Español"){              
+            //Español Voice Commands
 
-          speechRs.on("reproducir canción",function(){ 
-            playSong();
-          }); 
+            speechRs.rec_start('es-ES',function(final_transcript,interim_transcript){
+              console.log(final_transcript,interim_transcript);
+            });   
 
-          speechRs.on("pausar canción",function(){ 
-            pauseSong();
-          }); 
+            speechRs.on("reproducir canción",function(){ 
+              playSong();
+            }); 
 
-          speechRs.on("stop canción",function(){ 
-            stopSong();
-          });
+            speechRs.on("parar canción",function(){ 
+              pauseSong();
+            }); 
 
-          speechRs.on("siguiente canción",function(){ 
-            nextSong();
-          }); 
+            speechRs.on("stop canción",function(){ 
+              stopSong();
+            });
 
-          speechRs.on("canción anterior",function(){ 
-            prevSong();
-          });
+            speechRs.on("siguiente canción",function(){ 
+              nextSong();
+            }); 
 
-          //https://www.youtube.com/watch?v=BmdZtjxFFlQ
+            speechRs.on("canción anterior",function(){ 
+              prevSong();
+            });
+
+            //https://www.youtube.com/watch?v=BmdZtjxFFlQ
+          }
         }
     </script>
 
@@ -242,24 +289,22 @@
 
   	<body onLoad="initiate();">
   		<nav class="navbar navbar-expand navbar-light bg-light">
-		    <a class="navbar-brand" href="#">
-		      	<img src="" width="38" height="38" class="d-inline-block align-top" alt="">MusiCall
-		    </a>
+		    <!--
+          <a class="navbar-brand" href="">
+		      </a>
+        -->
 		    <div>
-		    	<span style="font-size:30px;cursor:pointer" onclick="openNav()">&#9776; Songs</span>
-		    	<script>
-		      	function openNav() {
-		      		document.getElementById("myNav").style.width = "100%";
-		      	}
-		      		
-		      	function closeNav() {
-		      		document.getElementById("myNav").style.width = "0%";
-	     			}
-	     		</script>
-	    	</div>
+		    	<span style="font-size:30px;" onclick="openNav()"> <img src="./images/logo.png" width="155" height="70"/></span>
+        </div>
+        <div class="navbar-nav ml-auto">
+          <select id="selectLanguage" onchange="changeLanguage(document.getElementById('selectLanguage').value);">
+            <option value="English">English</option>
+            <option value="Español">Español</option>
+          </select> 
+        </div>  
 	 	  </nav>
-  	<div id="myNav" class="overlay " >
-		  <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a>
+
+  	<div id="myNav" class="overlay" >
 		 	<div class="overlay-content">
 			  <div class="mpSongs" id="mpSongs">
 			  </div>
@@ -275,8 +320,9 @@
           {{ csrf_field() }}
 	        <div class="mpHead input-group">
 	          <input type="text" class="form-control" name="mpPath" id="mpPath" placeholder="Music Path" aria-label="Recipient's username" aria-describedby="basic-addon2">
-				  	<div class="input-group-append">
-			        <button type="submit" class="btn btn-primary" style="z-index: 0">Upload Songs</button>
+            <input type="hidden" id="hLanguage" name="language" value="English"/>
+				  	<div class="input-group-append">	        
+              <button type="submit"  id="uploadSongsButton" class="btn btn-primary" style="z-index: 0">Upload Songs</button>
 						</div>	               	
 					</div>
 				</form>   
@@ -297,9 +343,9 @@
 
 			<div class="row align-items-center justify-content-center">
         <div class="mpButtons">
-          <input type="image" class="playImg col ml-3" src="./images/back.png" onClick="prevSong();"/>
-          <input type="image" id="playIcon" class="playImg col ml-3" src="./images/play.png" onClick="playSong();"/>
-          <input type="image" class="playImg col ml-3" src="./images/next.png" onClick="nextSong();"/>
+          <input type="image" class="playImg col ml-3" src="./images/back.png" onclick="prevSong();"/>
+          <input type="image" id="playIcon" class="playImg col ml-3" src="./images/play.png" onclick="playSong();"/>
+          <input type="image" class="playImg col ml-3" src="./images/next.png" onclick="nextSong();"/>
         </div>
       </div>
 
@@ -312,8 +358,6 @@
 	        <?php
 	          if(isset($message)){
 	            echo $message;
-	          }else if(isset($error)){
-	            echo $error;
 	          }
 	        ?>
 	      </div>

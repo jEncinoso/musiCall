@@ -8,15 +8,6 @@ input.playImg{
 	width: 80px;
 }
 
-hr {
- border: 0;
-  clear:both;
-  display:block;
-  width: 96%;               
-  background-color:#d3d3d3;
-  height: 1px;
-}
-
 .overlay {
     height: 100%;
     width: 0;
@@ -31,7 +22,7 @@ hr {
 }
 
 .overlay-content {
-    position: relative;
+    height: 100%;
     top: 25%;
     width: 100%;
     text-align: center;
@@ -60,16 +51,36 @@ hr {
     color: #f1f1f1;
 }
 
+.overlay td{
+    overflow-x: hidden;
+    max-width: 15vw !important; 
+    text-align: center; 
+    vertical-align: middle;
+}
+
 .overlay td:hover, .overlay td:focus {
     color: #f1f1f1;
 }
 
-.overlay .closebtn {
+.overlay {
     position: absolute;
-    top: 20px;
     right: 45px;
     font-size: 60px;
 }
+
+hr {
+    border: 0;
+    clear:both;
+    display:block;
+    width: 96%;               
+    background-color:#d3d3d3;
+    height: 1px;
+}
+
+#language {
+    margin-left: 60%;
+}
+
 
 #refreshIcon{
     width:25px;
@@ -80,3 +91,4 @@ hr {
     width:20px;
     height:20px;
 }
+
