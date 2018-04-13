@@ -9,9 +9,6 @@ use DB;
 class musiCallController extends Controller{
 
     public function uploadSongs(Request $request){
-        $language=$request->language;
-        $request->session()->put('language', $language);
-
         $DirectoryToScan=$request->mpPath;
         if($DirectoryToScan!=""){
             if(is_dir($DirectoryToScan)){
@@ -43,45 +40,15 @@ class musiCallController extends Controller{
                             }
                         }
                     }
-
-                    switch($language){
-                        case "English":
-                            $message=$songsUploaded." new songs uploaded.";
-                            break;
-                        case "Español":
-                            $message=$songsUploaded." canciones nuevas subidas.";
-                            break;
-                    }
-
+                    $message=$songsUploaded." new songs uploaded.";
                 }else{
-                    switch($language){
-                        case "English":
-                            $message="0 songs found in ".$DirectoryToScan;
-                            break;
-                        case "Español":
-                            $message="0 canciones encontradas en ".$DirectoryToScan;
-                            break;
-                    }
+                    $message="0 songs found in ".$DirectoryToScan;
                 }
             }else{
-                switch($language){
-                    case "English":
-                        $message=$DirectoryToScan." is not a folder.";
-                        break;
-                    case "Español":
-                        $message=$DirectoryToScan." no es un directorio.";
-                        break;
-                }
+                $message=$DirectoryToScan." is not a folder.";
             }
         }else{
-            switch($language){
-                case "English":
-                    $message="Write a music path.";
-                    break;
-                case "Español":
-                    $message="Introduza la ruta a un directorio.";
-                    break;
-            }
+            $message="Write a music path.";
         }
         return view('player',['message'=>$message]);
     } 

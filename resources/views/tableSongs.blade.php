@@ -12,24 +12,49 @@
 	</tr>
 	<tr>
 		<th id="thName">Name
-			<img class="tableIcons" src="./images/orderDown.png" onclick="showOrderedSongs('down','name','{{$filter}}','{{$filterName}}');"/>
-			<img class="tableIcons" src="./images/orderUp.png" onclick="showOrderedSongs('up','name','{{$filter}}','{{$filterName}}');"/>
+			<img class="tableIcons desktop" src="./images/orderDown.png" onclick="showOrderedSongs('down','name','{{$filter}}','{{$filterName}}');"/>
+			<img class="tableIcons desktop" src="./images/orderUp.png" onclick="showOrderedSongs('up','name','{{$filter}}','{{$filterName}}');"/>
+
+			<div class="orderArrows">
+				<img class="tableIcons" src="./images/orderDown.png" onclick="showOrderedSongs('down','name','{{$filter}}','{{$filterName}}');"/>
+				<img class="tableIcons" src="./images/orderUp.png" onclick="showOrderedSongs('up','name','{{$filter}}','{{$filterName}}');"/>
+			</div>
 		</th>
 		<th id="thArtist">Artist
-			<img class="tableIcons" src="./images/orderDown.png" onclick="showOrderedSongs('down','artist','{{$filter}}','{{$filterName}}');"/>
-			<img class="tableIcons" src="./images/orderUp.png" onclick="showOrderedSongs('up','artist','{{$filter}}','{{$filterName}}');"/>
+			<img class="tableIcons desktop" src="./images/orderDown.png" onclick="showOrderedSongs('down','name','{{$filter}}','{{$filterName}}');"/>
+			<img class="tableIcons desktop" src="./images/orderUp.png" onclick="showOrderedSongs('up','name','{{$filter}}','{{$filterName}}');"/>
+
+			<div class="orderArrows">
+				<img class="tableIcons" src="./images/orderDown.png" onclick="showOrderedSongs('down','name','{{$filter}}','{{$filterName}}');"/>
+				<img class="tableIcons" src="./images/orderUp.png" onclick="showOrderedSongs('up','name','{{$filter}}','{{$filterName}}');"/>
+			</div>
 		</th>
 		<th id="thAlbum">Album
-			<img class="tableIcons" src="./images/orderDown.png" onclick="showOrderedSongs('down','album','{{$filter}}','{{$filterName}}');"/>
-			<img class="tableIcons" src="./images/orderUp.png" onclick="showOrderedSongs('up','album','{{$filter}}','{{$filterName}}');"/>
+			<img class="tableIcons desktop" src="./images/orderDown.png" onclick="showOrderedSongs('down','name','{{$filter}}','{{$filterName}}');"/>
+			<img class="tableIcons desktop" src="./images/orderUp.png" onclick="showOrderedSongs('up','name','{{$filter}}','{{$filterName}}');"/>
+
+			<div class="orderArrows">
+				<img class="tableIcons" src="./images/orderDown.png" onclick="showOrderedSongs('down','name','{{$filter}}','{{$filterName}}');"/>
+				<img class="tableIcons" src="./images/orderUp.png" onclick="showOrderedSongs('up','name','{{$filter}}','{{$filterName}}');"/>
+			</div>
 		</th>
 		<th id="thGenre">Genre
-			<img class="tableIcons" src="./images/orderDown.png" onclick="showOrderedSongs('down','genre','{{$filter}}','{{$filterName}}');"/>
-			<img class="tableIcons" src="./images/orderUp.png" onclick="showOrderedSongs('up','genre','{{$filter}}','{{$filterName}}');"/>
+			<img class="tableIcons desktop" src="./images/orderDown.png" onclick="showOrderedSongs('down','name','{{$filter}}','{{$filterName}}');"/>
+			<img class="tableIcons desktop" src="./images/orderUp.png" onclick="showOrderedSongs('up','name','{{$filter}}','{{$filterName}}');"/>
+
+			<div class="orderArrows">
+				<img class="tableIcons" src="./images/orderDown.png" onclick="showOrderedSongs('down','name','{{$filter}}','{{$filterName}}');"/>
+				<img class="tableIcons" src="./images/orderUp.png" onclick="showOrderedSongs('up','name','{{$filter}}','{{$filterName}}');"/>
+			</div>
 		</th>
 		<th id="thLength">Length
-			<img class="tableIcons" src="./images/orderDown.png" onclick="showOrderedSongs('down','length','{{$filter}}','{{$filterName}}');"/>
-			<img class="tableIcons" src="./images/orderUp.png" onclick="showOrderedSongs('up','length','{{$filter}}','{{$filterName}}');"/>
+			<img class="tableIcons desktop" src="./images/orderDown.png" onclick="showOrderedSongs('down','name','{{$filter}}','{{$filterName}}');"/>
+			<img class="tableIcons desktop" src="./images/orderUp.png" onclick="showOrderedSongs('up','name','{{$filter}}','{{$filterName}}');"/>
+
+			<div class="orderArrows">
+				<img class="tableIcons" src="./images/orderDown.png" onclick="showOrderedSongs('down','name','{{$filter}}','{{$filterName}}');"/>
+				<img class="tableIcons" src="./images/orderUp.png" onclick="showOrderedSongs('up','name','{{$filter}}','{{$filterName}}');"/>
+			</div>
 		</th>
 	</tr>
 
@@ -62,11 +87,11 @@
 				$counterHidden++;
 			?>	
 			
-			<td id='{{$counter}}' title="{{$totalSongs}}" onclick='playClickedSong("{{$song->name}}","{{$counter}}"); closeNav();'>{{$song->name}}</td>
-			<td onclick="showFilteredSongs('artist','{{$song->artist}}')">{{$song->artist}}</td>
-			<td onclick="showFilteredSongs('album','{{$song->album}}')">{{$song->album}}</td>
-			<td onclick="showFilteredSongs('genre','{{$song->genre}}')">{{$song->genre}}</td>
-			<td>{{$song->length}}</td>
+			<td class="tdSongs" id='{{$counter}}' title="{{$totalSongs}}" onclick='playClickedSong("{{$song->name}}","{{$counter}}"); closeNav();'>{{$song->name}}</td>
+			<td class="tdSongs" onclick="showFilteredSongs('artist','{{$song->artist}}')">{{$song->artist}}</td>
+			<td class="tdSongs" onclick="showFilteredSongs('album','{{$song->album}}')">{{$song->album}}</td>
+			<td class="tdSongs" onclick="showFilteredSongs('genre','{{$song->genre}}')">{{$song->genre}}</td>
+			<td class="tdSongs">{{$song->length}}</td>
 			
 		</tr>
 	<?php

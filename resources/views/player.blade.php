@@ -25,36 +25,6 @@
         function closeNav() {
           document.getElementById("myNav").style.width = "0%";
         }
-        /**********************************************************/
-        /*                    Language Methods                     / 
-        /**********************************************************/
-        function changeLanguage(language){
-
-          switch(language){
-            case "English":
-              document.getElementById("mpPath").placeholder="Music Path";
-              document.getElementById("uploadSongsButton").innerHTML="Upload Songs";
-              document.getElementById("thName").innerHTML="Name";
-              document.getElementById("thArtist").innerHTML="Artist";
-              document.getElementById("thAlbum").innerHTML="Album";
-              document.getElementById("thGenre").innerHTML="Genre";
-              document.getElementById("thLength").innerHTML="Length";
-              break;
-
-            case "Español":
-              document.getElementById("mpPath").placeholder="Ruta de la música";
-              document.getElementById("uploadSongsButton").innerHTML="Subir canciones";
-              document.getElementById("thName").innerHTML="Nombre";
-              document.getElementById("thArtist").innerHTML="Artista";
-              document.getElementById("thAlbum").innerHTML="Album";
-              document.getElementById("thGenre").innerHTML="Género";
-              document.getElementById("thLength").innerHTML="Duración";
-
-              //Form language value
-              document.getElementById("hLanguage").value="Español";
-              break;
-          }
-        }
 
         /**********************************************************/
         /*               Song List/Database Methods                / 
@@ -71,11 +41,9 @@
             }
           };
 
-          var language=document.getElementById("hLanguage").value;
-
           xhr.open("POST", 'getSongs', true);
           xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-          var parameters = "_token="+token+"&language="+language;
+          var parameters = "_token="+token;
           xhr.send(parameters);   
         }
 
@@ -88,11 +56,10 @@
           };
 
           mp3.title="";
-          var language=document.getElementById('selectLanguage').value;
 
           xhr.open("POST", 'getFilteredSong', true);
           xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-          var parameters = "_token="+token+"&filter="+filter+"&name="+name+"&language="+language;
+          var parameters = "_token="+token+"&filter="+filter+"&name="+name;
           xhr.send(parameters);   
         }
 
@@ -105,11 +72,10 @@
           };
 
           mp3.title="";
-          var language=document.getElementById('selectLanguage').value;
 
           xhr.open("POST", 'getOrderedSongs', true);
           xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-          var parameters = "_token="+token+"&order="+order+"&field="+field+"&filter="+filter+"&name="+name+"&language="+language;
+          var parameters = "_token="+token+"&order="+order+"&field="+field+"&filter="+filter+"&name="+name;
           xhr.send(parameters);  
         }
 
@@ -297,7 +263,7 @@
 		    	<span style="font-size:30px;" onclick="openNav()"> <img src="./images/logo.png" width="155" height="70"/></span>
         </div>
         <div class="navbar-nav ml-auto">
-          <select id="selectLanguage" onchange="changeLanguage(document.getElementById('selectLanguage').value);">
+          <select id="selectLanguage">
             <option value="English">English</option>
             <option value="Español">Español</option>
           </select> 
@@ -363,7 +329,6 @@
 	      </div>
         <br>
         <div id="nowPlaying" class="col-md-12 col-sm-12 col-xs-12">
-          
         </div>
       </div>
            

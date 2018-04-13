@@ -43,7 +43,6 @@ input.playImg{
     text-decoration: none;
     font-size: 36px;
     color: #818181;
-    display: block;
     transition: 0.3s;
 }
 
@@ -55,6 +54,14 @@ input.playImg{
     overflow-x: hidden;
     max-width: 15vw !important; 
     text-align: center; 
+    vertical-align: middle;
+    line-height:100%;
+    vertical-align: middle;
+}
+
+.overlay td.tdSongs{
+    border:1px solid white;
+    line-height: 100%;
     vertical-align: middle;
 }
 
@@ -68,6 +75,26 @@ input.playImg{
     font-size: 60px;
 }
 
+@media only screen and (max-width: 440px) {
+    .tableIcons.desktop{
+        visibility: hidden;
+    }
+
+    .orderArrows{
+        min-width:50px;
+        visibility: visible;
+    }
+}
+
+.orderArrows{
+    visibility: hidden;
+}
+
+.tableIcons.desktop{
+    visibility: visible;
+}
+
+
 hr {
     border: 0;
     clear:both;
@@ -76,11 +103,6 @@ hr {
     background-color:#d3d3d3;
     height: 1px;
 }
-
-#language {
-    margin-left: 60%;
-}
-
 
 #refreshIcon{
     width:25px;
