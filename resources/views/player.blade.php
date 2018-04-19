@@ -9,6 +9,9 @@
     <!-- own CSS -->
     <link rel="stylesheet" type="text/css" href="./css/style.css">
     <script type="text/javascript" src="{{URL::asset('js/rs.speech.js-master/src/rs.speech.js')}}"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
 
     <title> musiCall</title>
 
@@ -25,6 +28,18 @@
         function closeNav() {
           document.getElementById("myNav").style.width = "0%";
         }
+
+        $(document).keydown(function(e) {
+          if (e.keyCode == 27) {
+            closeNav();
+          }
+          if (e.keyCode == 32) {
+            playSong();
+          }
+          if (e.keyCode == 8) {
+            prevSong();
+          }
+        });
 
         /**********************************************************/
         /*               Song List/Database Methods                / 
@@ -164,21 +179,28 @@
         }
 
         function nextSong(){
-          var actualTrack=mp3.getAttribute("data-song-track");
-          actualTrack++;
-          if(document.getElementById(actualTrack)==null){
-            actualTrack=1;
+          var actualTrack;
+
+          if(random==1){
+              var limit = document.getElementById("1").getAttribute("data-songs-quantity");
+              actualTrack= Math.floor((Math.random() * limit) + 1);
+          }else{
+            actualTrack=mp3.getAttribute("data-song-track");
+            actualTrack++;
           }
+
           mp3.setAttribute("data-song-track", actualTrack);
 
           var songData = getSongData(actualTrack);
-
+          console.log(songData);
+          
           mp3.src="./music/"+encodeURIComponent(songData[0])+".mp3";
           setSongData(songData);
-          
+
           showSongData(songData);
           trackInfo=document.getElementById('trackInfo');
           document.getElementById("playIcon").src="./images/pause.png";
+
           mp3.play();
         }
 
@@ -200,6 +222,18 @@
           trackInfo=document.getElementById('trackInfo');
           document.getElementById("playIcon").src="./images/pause.png";
           mp3.play();
+        }
+
+        function setRandomMusic(){
+          if(random==1){
+            random=0;
+            console.log("Random: "+random);
+            document.getElementById('randomButton').src="./images/random.png";
+          }else{
+            random=1;
+            document.getElementById('randomButton').src="./images/randomPressed.png";
+            console.log("Random: "+random);        
+          }
         }
 
         /**********************************************************/
@@ -239,7 +273,7 @@
               mp3.setAttribute("data-song-track", songList[i][2]);
               break;
             }else{
-              mp3.setAttribute("data-song-track", "");
+              mp3.setAttribute("data-song-track", 0)
             }
           }
         }
@@ -288,6 +322,10 @@
 
             speechRs.on("back",function(){ 
               prevSong();
+            });
+
+            speechRs.on("random",function(){ 
+              setRandomMusic();
             }); 
 
             /*speechRs.on("play artist",function(){ 
@@ -295,7 +333,9 @@
               showFilteredSongs("artist", name);
             }); */
 
-          }else if(language = "Español"){              
+          }
+
+          if(language = "Español"){              
             //Español Voice Commands
 
             speechRs.rec_start('es-ES',function(final_transcript,interim_transcript){
@@ -322,9 +362,15 @@
               prevSong();
             });
 
+            speechRs.on("aleatorio",function(){ 
+              setRandomMusic();
+            });
+
+
             //https://www.youtube.com/watch?v=BmdZtjxFFlQ
           }
         }
+
     </script>
 
   	</head>
@@ -384,10 +430,11 @@
       </div>
 
 			<div class="row align-items-center justify-content-center">
-        <div class="mpButtons">
-          <input type="image" class="playImg col ml-3" src="./images/back.png" onclick="prevSong();"/>
-          <input type="image" id="playIcon" class="playImg col ml-3" src="./images/play.png" onclick="playSong();"/>
-          <input type="image" class="playImg col ml-3" src="./images/next.png" onclick="nextSong();"/>
+        <div class="mpButtons btn-group btn-group-sm" role="group">
+          <button class="btn btn-secondary"><input type="image" class="playImg col ml-3 col sm-3 col-xs-3 " src="./images/back.png" onclick="prevSong();"/></button>
+          <button class="btn btn-secondary"><input type="image" class="playImg col ml-3 sm-3 xs-3" id="playIcon"  src="./images/play.png" onclick="playSong();"/></button>
+          <button class="btn btn-secondary"><input type="image" class="playImg col ml-3 sm-3 xs-3" src="./images/next.png" onclick="nextSong();"/></button>
+          <button class="btn btn-secondary"><input type="image" class="randomImg col ml-3 sm-3 xs-3" id="randomButton" src="./images/random.png" onclick="setRandomMusic();"/></button>
         </div>
       </div>
 
@@ -410,10 +457,12 @@
            
       <div class="row">
         <hr>
+
         <audio id="mp3" src="" data-song-name="" data-song-track="" data-song-artist="" data-song-album="" data-song-genre="" class="col-md-12" controls controlsList="nodownload" onended="nextSong();"></audio>
         <script type="text/javascript">
           var mp3=document.getElementById("mp3");
           var trackInfo;
+          var random=0;
         </script>
 
         <br><br>
@@ -431,9 +480,5 @@
       </div>
 
     </div>
-
-  <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
  	</body>
 </html>

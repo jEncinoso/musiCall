@@ -1,11 +1,29 @@
 input.microImg{
 	height: 200px;
 	width: 200px;
+    outline:none;
 }
 
 input.playImg{
 	height: 80px;
 	width: 80px;
+    outline:none;
+}
+
+input.randomImg{
+    height: 80px;
+    width: 100px;
+    outline:none;
+}
+
+select#selectLanguage{
+    outline:none;
+}
+
+.mpButtons button{
+    background-color: white;
+    border:none;
+    outline:none;
 }
 
 .overlay {
