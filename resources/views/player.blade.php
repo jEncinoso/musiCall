@@ -5,10 +5,12 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <!-- Bootstrap CSS -->
-	  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <!-- own CSS -->
     <link rel="stylesheet" type="text/css" href="./css/style.css">
+
     <script type="text/javascript" src="{{URL::asset('js/rs.speech.js-master/src/rs.speech.js')}}"></script>
+
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
@@ -17,66 +19,67 @@
     <script type="text/javascript">
       var token="{{ csrf_token() }}";
     </script>
+
     <script type="text/javascript" src="{{URL::asset('./js/musiCall.js')}}"></script>
-    </script>
 
-  	</head>
+  </head>
 
-  	<body onLoad="initiate();">
-  		<nav class="navbar navbar-expand navbar-light bg-light">
-		    <!--
-          <a class="navbar-brand" href="">
-		      </a>
-        -->
-		    <div>
-		    	<span style="font-size:30px;" onclick="openNav()"> <img src="./images/logo.png" width="155" height="70"/></span>
+  <body onLoad="initiate();">
+    <nav class="navbar navbar-expand navbar-light bg-light">
+      <!--
+      <a class="navbar-brand" href="">
+      </a>
+      -->
+      <div>
+        <span style="font-size:30px;" onclick="openNav()"> <img src="./images/logo.png" width="155" height="70"/></span>
+      </div>
+      <div class="navbar-nav ml-auto">
+        <select id="selectLanguage">
+          <option value="English">English</option>
+          <option value="Español">Español</option>
+        </select> 
+      </div>  
+    </nav>
+
+    <div id="myNav" class="overlay" >
+      <div class="overlay-content">
+        <div class="mpSongs" id="mpSongs">
         </div>
-        <div class="navbar-nav ml-auto">
-          <select id="selectLanguage">
-            <option value="English">English</option>
-            <option value="Español">Español</option>
-          </select> 
-        </div>  
-	 	  </nav>
-
-  	<div id="myNav" class="overlay" >
-		 	<div class="overlay-content">
-			  <div class="mpSongs" id="mpSongs">
-			  </div>
-		  </div>
-		</div>
+      </div>
+    </div>
 
     <div class="container">
       <!-- Content here -->
       <h1 align="center"></h1>
 
       <div class="row">
-				<form method="post" class="col-md-12 col-sm-12 col-xs-12" action="uploadSongs">
+        <form method="post" class="col-md-12 col-sm-12 col-xs-12" action="uploadSongs">
           {{ csrf_field() }}
-	        <div class="mpHead input-group">
-	          <input type="text" class="form-control" name="mpPath" id="mpPath" placeholder="Music Path" aria-label="Recipient's username" aria-describedby="basic-addon2">
+          <div class="mpHead input-group">
+            <input type="text" class="form-control" name="mpPath" id="mpPath" placeholder="Music Path" aria-label="Recipient's username" aria-describedby="basic-addon2">
             <input type="hidden" id="hLanguage" name="language" value="English"/>
-				  	<div class="input-group-append">	        
+            <div class="input-group-append">	        
               <button type="submit"  id="uploadSongsButton" class="btn btn-primary" style="z-index: 0">Upload Songs</button>
-						</div>	               	
-					</div>
-				</form>   
+            </div>	               	
+          </div>
+        </form>   
       </div>
 
       <div class="row">
         <hr>
       </div>
 
-			<div class="row align-items-center justify-content-center">
+      <div class="row align-items-center justify-content-center">
         <div class="mpMicrophone">
           <input type="image" class="microImg" src="./images/microphone.png" onclick="recordAction();"/>
-				</div>
+        </div>
       </div>
+      
       <div class="row">
         <hr>
       </div>
 
-			<div class="row align-items-center justify-content-center">
+      <div class="row align-items-center justify-content-center">
         <div class="mpButtons btn-group btn-group-sm" role="group">
           <button class="btn"><input type="image" class="playImg col ml-3 col sm-3 col-xs-3 " src="./images/back.png" onclick="prevSong();"/></button>
           <button class="btn"><input type="image" class="playImg col ml-3 sm-3 xs-3" id="playIcon"  src="./images/play.png" onclick="playSong();"/></button>
@@ -91,37 +94,36 @@
 
       <div class="row">
         <div id="message">
-	        <?php
-	          if(isset($message)){
-	            echo $message;
-	          }
-	        ?>
-	      </div>
+          <?php
+            if(isset($message)){
+              echo $message;
+            }
+          ?>
+        </div>
         <br>
         <div id="nowPlaying" class="col-md-12 col-sm-12 col-xs-12">
         </div>
       </div>
-           
+
       <div class="row">
         <hr>
 
         <audio id="mp3" src="" data-song-name="" data-song-track="" data-song-artist="" data-song-album="" data-song-genre="" class="col-md-12" controls controlsList="nodownload" onended="nextSong();"></audio>
         <script type="text/javascript">
           var mp3=document.getElementById("mp3");
-          var trackInfo;
           var random=0;
         </script>
 
         <br><br>
-            	<!--
-            	  <div> 
-        					<button onclick="mp3.play()">Play</button> 
-        					<button onclick="mp3.pause()">Pause</button> 
-        					<button onclick="mp3.volume += 0.1">Vol+ </button> 
-        					<button onclick="mp3.volume -= 0.1">Vol- </button> 
-      			  	</div>
-      				-->
+        <!--
+        <div> 
+        <button onclick="mp3.play()">Play</button> 
+        <button onclick="mp3.pause()">Pause</button> 
+        <button onclick="mp3.volume += 0.1">Vol+ </button> 
+        <button onclick="mp3.volume -= 0.1">Vol- </button> 
+        </div>
+        -->
       </div>
     </div>
- 	</body>
+  </body>
 </html>

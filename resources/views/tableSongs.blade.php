@@ -69,7 +69,7 @@
 
 	@foreach($songs as $song)
 		<tr>	
-			<td class="tdSongs" id='{{$counter}}' data-songs-quantity="{{$totalSongs}}" data-song-name="{{$song->name}}" data-song-artist="{{$song->artist}}" data-song-album="{{$song->album}}" data-song-genre="{{$song->genre}}" data-song-track="{{$counter}}" onclick='playClickedSong("{{$song->name}}","{{$song->artist}}","{{$song->album}}", "{{$song->genre}}","{{$counter}}"); closeNav();'>{{$song->name}}</td>
+			<td class="tdSongs" id='{{$counter}}' data-songs-quantity="{{$totalSongs}}" data-song-name="{{$song->name}}" data-song-artist="{{$song->artist}}" data-song-album="{{$song->album}}" data-song-genre="{{$song->genre}}" data-song-track="{{$counter}}" onclick='playClickedSong("{{$counter}}"); closeNav();'>{{$song->name}}</td>
 			<td class="tdSongs" onclick='showFilteredSongs("artist","{{$song->artist}}")'>{{$song->artist}}</td>
 			<td class="tdSongs" onclick='showFilteredSongs("album","{{$song->album}}")'>{{$song->album}}</td>
 			<td class="tdSongs" onclick='showFilteredSongs("genre","{{$song->genre}}")'>{{$song->genre}}</td>

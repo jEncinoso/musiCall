@@ -15,12 +15,6 @@
     if (e.keyCode == 27) {
       closeNav();
     }
-    if (e.keyCode == 32) {
-      playSong();
-    }
-    if (e.keyCode == 8) {
-      prevSong();
-    }
   });
 
   /**********************************************************/
@@ -96,22 +90,21 @@
   /**********************************************************/
   /*                Methods called by clicking               / 
   /**********************************************************/
-  function playClickedSong(song, artist, album, genre, track){
-    mp3.setAttribute("data-song-name", song);
-    mp3.setAttribute("data-song-artist", artist);
-    mp3.setAttribute("data-song-album", song);
-    mp3.setAttribute("data-song-genre", artist);
-    mp3.setAttribute("data-song-track", track);
-    
-    var songData = new Array(song, artist, album, genre);
+  function playClickedSong(track){
+    var trackInfo=trackInfo=document.getElementById('trackInfo');
+    var songData = getSongData(track);
 
-    mp3.src="./music/"+song+".mp3";
+    mp3.src = "./music/"+encodeURIComponent(songData[0])+".mp3";
+
+    setSongData(songData);
     showSongData(songData);
+    mp3.setAttribute("data-song-track", track);
     document.getElementById("playIcon").src="./images/pause.png";
     mp3.play();
   }
 
   function playSong(){
+    var trackInfo=trackInfo=document.getElementById('trackInfo');
     //set first song of the list as default
     if(mp3.getAttribute("data-song-track")==""){
       mp3.setAttribute("data-song-track", "1");
@@ -138,7 +131,6 @@
         trackInfo.start();
       }else{
         showSongData(songData);
-        trackInfo=document.getElementById('trackInfo');
         mp3.play();
       }
     }else if(iconPath[iconPath.length-1]=="pause.png"){
@@ -161,6 +153,7 @@
 
   function nextSong(){
     var actualTrack;
+    var trackInfo=trackInfo=document.getElementById('trackInfo');
 
     if(random==1){
       var limit = document.getElementById("1").getAttribute("data-songs-quantity");
@@ -190,6 +183,7 @@
   }
 
   function prevSong(){
+    var trackInfo=trackInfo=document.getElementById('trackInfo');
     var actualTrack=mp3.getAttribute("data-song-track");
     actualTrack--;
     if(document.getElementById(actualTrack)==null){
@@ -245,7 +239,7 @@
     var name = songData[0];
     var artist = songData[1];
     var album = songData[2];
-    var  genre = songData[3];
+    var genre = songData[3];
 
     document.getElementById("message").innerHTML="";
     document.getElementById("nowPlaying").innerHTML=
@@ -292,6 +286,10 @@
         playSong();
       }); 
 
+      
+
+
+
       speechRs.on("pause",function(){ 
         pauseSong();
       }); 
@@ -319,7 +317,7 @@
 
     }
 
-    if(language = "Español"){              
+    if(language == "Español"){              
       //Español Voice Commands
 
       speechRs.rec_start('es-ES',function(final_transcript,interim_transcript){
@@ -330,11 +328,11 @@
         playSong();
       }); 
 
-      speechRs.on("parar",function(){ 
+      speechRs.on("pausar",function(){ 
         pauseSong();
       }); 
 
-      speechRs.on("stop",function(){ 
+      speechRs.on("parar",function(){ 
         stopSong();
       });
 
@@ -342,7 +340,7 @@
         nextSong();
       }); 
 
-      speechRs.on("canción",function(){ 
+      speechRs.on("anterior",function(){ 
         prevSong();
       });
 
