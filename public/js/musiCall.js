@@ -91,6 +91,7 @@
   /*                Methods called by clicking               / 
   /**********************************************************/
   function playClickedSong(track){
+    setTimerTo0();
     var trackInfo=trackInfo=document.getElementById('trackInfo');
     var songData = getSongData(track);
 
@@ -145,6 +146,7 @@
   }
 
   function stopSong(){
+    setTimerTo0();
     document.getElementById("playIcon").src="./images/play.png";
     mp3.pause();
     mp3.currentTime=0;
@@ -152,6 +154,7 @@
   }
 
   function nextSong(){
+    setTimerTo0();
     var actualTrack;
     var trackInfo=trackInfo=document.getElementById('trackInfo');
 
@@ -183,6 +186,7 @@
   }
 
   function prevSong(){
+    setTimerTo0();
     var trackInfo=trackInfo=document.getElementById('trackInfo');
     var actualTrack=mp3.getAttribute("data-song-track");
     actualTrack--;
@@ -271,6 +275,30 @@
     return songList;
   }
 
+  function setTimerTo0(){
+    document.getElementById('timer').innerHTML="00:00";
+  }
+
+  function getSongCurrentTime(mp3){
+    secs=parseInt(mp3.currentTime);
+    mins=parseInt(secs/60);
+
+    if(secs>=60){
+      secs=secs-60*mins;
+    }
+
+    if(secs<10){
+      secs="0"+secs;
+    }
+    if(mins<10){
+      mins="0"+mins;
+    }
+  
+    length=mins+":"+secs;
+
+    return length;
+  }
+
   /**********************************************************/
   /*               Methods called by microphone              / 
   /**********************************************************/
@@ -286,9 +314,7 @@
         playSong();
       }); 
 
-      
-
-
+    
 
       speechRs.on("pause",function(){ 
         pauseSong();
@@ -350,4 +376,19 @@
       
       //https://www.youtube.com/watch?v=BmdZtjxFFlQ
     }
+  }
+
+  /**********************************************************/
+  /*                  Control Methods                        / 
+  /**********************************************************/
+  function mDur(){
+    timeBar.max= mp3.duration;
+  }
+
+  function mPlay(){
+    timeBar.value=mp3.currentTime;
+  }
+
+  function mSet(){
+    mp3.currentTime=timeBar.value;
   }

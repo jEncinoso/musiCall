@@ -92,7 +92,7 @@
         <hr>
       </div>
 
-      <div class="row">
+      <div class="row nowPlayingRow">
         <div id="message">
           <?php
             if(isset($message)){
@@ -107,23 +107,30 @@
 
       <div class="row">
         <hr>
+        <div id="progress" class="progress">
+          <input id="seekbar" type="range" name="rng" min="0" step="0.25" value="0" onchange="mSet()" style="width: 100%">
+        </div>
+        <div id="timer" class="col-2 currentTime">00:00</div> 
+      
+        <audio id="mp3" src="" data-song-name="" data-song-track="" data-song-artist="" data-song-album="" data-song-genre="" class="col-md-12" data-song-currentTime=""; onended="nextSong();" preload="metadata" onloadedmetadata="mDur()" ontimeupdate="mPlay()" controls="none" style="display:none;"></audio>
 
-        <audio id="mp3" src="" data-song-name="" data-song-track="" data-song-artist="" data-song-album="" data-song-genre="" class="col-md-12" controls controlsList="nodownload" onended="nextSong();"></audio>
         <script type="text/javascript">
           var mp3=document.getElementById("mp3");
+          var timeBar=document.getElementById('seekbar');
           var random=0;
-        </script>
 
-        <br><br>
-        <!--
-        <div> 
-        <button onclick="mp3.play()">Play</button> 
-        <button onclick="mp3.pause()">Pause</button> 
-        <button onclick="mp3.volume += 0.1">Vol+ </button> 
-        <button onclick="mp3.volume -= 0.1">Vol- </button> 
-        </div>
-        -->
-      </div>
+          var mins=0;
+          var secs=0;
+
+          var time=0;
+          setInterval(function(){
+            if(parseInt(Math.floor(mp3.currentTime))>0 && document.getElementById('playIcon').src=="http://localhost/musiCall/public/images/pause.png"){
+              length=getSongCurrentTime(mp3);
+              mp3.setAttribute("data-song-currentTime", length);
+              document.getElementById('timer').innerHTML=length;
+            }
+          }, 0);
+        </script>
     </div>
   </body>
 </html>
