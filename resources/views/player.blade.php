@@ -55,6 +55,11 @@
       <div class="row">
         <form method="post" class="col-md-12 col-sm-12 col-xs-12" action="uploadSongs">
           {{ csrf_field() }}
+          <div class="autoMpHead">
+            <div class="input-group-append">          
+              <button type="submit"  id="uploadSongsButton" class="btn btn-primary" style="z-index: 0">Upload Songs</button>
+            </div>  
+          </div>
           <div class="mpHead input-group">
             <input type="text" class="form-control" name="mpPath" id="mpPath" placeholder="Music Path" aria-label="Recipient's username" aria-describedby="basic-addon2">
             <input type="hidden" id="hLanguage" name="language" value="English"/>

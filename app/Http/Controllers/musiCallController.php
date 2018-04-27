@@ -9,7 +9,8 @@ use DB;
 class musiCallController extends Controller{
 
     public function uploadSongs(Request $request){
-        $DirectoryToScan=$request->mpPath;
+        //$DirectoryToScan=$request->mpPath;
+        $DirectoryToScan="./music";
         if($DirectoryToScan!=""){
             if(is_dir($DirectoryToScan)){
                 $songsFullTags=$this->getFullTags($DirectoryToScan);
@@ -30,10 +31,10 @@ class musiCallController extends Controller{
                         if(!count($song)>0){
                             if(DB::insert('INSERT INTO t_songs (name, artist, album, genre, length) VALUES (?,?,?,?,?)',[utf8_encode($title), utf8_encode($artist), utf8_encode($album), utf8_encode($genre), $length])==true){
 
-                                //Method to move a file from one directory to another. rename(origin/name, destiny/name)
-                                copy($DirectoryToScan."\\".$title.".mp3", ".\\music\\".$title.".mp3");
+                                //Method to COPY a file from one directory to another. copy(origin/name, destiny/name)
+                                //copy($DirectoryToScan."\\".$title.".mp3", ".\\music\\".$title.".mp3");
 
-                                //Method to move a file from one directory to another. rename(origin/name, destiny/name)
+                                //Method to MOVE a file from one directory to another. rename(origin/name, destiny/name)
                                 //rename($DirectoryToScan."\\".$title.".mp3", ".\\music\\".$title.".mp3");  
 
                                 $songsUploaded++;   

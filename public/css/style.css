@@ -26,6 +26,10 @@ select#selectLanguage{
     outline:none;
 }
 
+.mpHead{
+    display:none;
+}
+
 .overlay {
     height: 100%;
     width: 0;
