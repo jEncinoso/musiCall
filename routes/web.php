@@ -19,3 +19,4 @@ Route::post('uploadSongs', 'musiCallController@uploadSongs');
 Route::post('getSongs', 'musicallController@getSongs');
 Route::post('getFilteredSong', 'musicallController@getFilteredSong');
 Route::post('getOrderedSongs', 'musicallController@getOrderedSongs');
+Route::post('checkSongs', 'musicallController@checkSongs');

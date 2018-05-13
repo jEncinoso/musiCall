@@ -21,11 +21,22 @@
   /*             Song List/Database Methods/AJAX             / 
   /**********************************************************/
   function initiate(){
-    showSongs();
-    setTimeout(function(){ 
-      songList = getSongList();
-      console.log(songList);
-    }, 1000);
+    checkSongs();
+    setTimeout(function(){
+      showSongs();
+    },1000);
+  }
+
+  function checkSongs(){
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+      if (this.readyState == 4 && this.status == 200) {
+      }
+    };
+    xhr.open("POST", 'checkSongs', true);
+    xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+    var parameters = "_token="+token;
+    xhr.send(parameters);   
   }
 
   function showSongs(){
@@ -39,6 +50,10 @@
     xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
     var parameters = "_token="+token;
     xhr.send(parameters);   
+
+    setTimeout(function(){ 
+      songList = getSongList();
+    }, 1000);
   }
 
   function showFilteredSongs(filter, name){
@@ -58,12 +73,11 @@
 
     setTimeout(function(){
       songList = getSongList();
-      console.log(songList);
-    }, 1000);
+    }, 300);
 
     setTimeout(function(){
       setAfterSongName(actualSongName);
-    }, 1500);
+    }, 500);
   }
 
   function showOrderedSongs(order, field, filter, name){
@@ -107,7 +121,7 @@
   function playSong(){
     var trackInfo=trackInfo=document.getElementById('trackInfo');
     //set first song of the list as default
-    if(mp3.getAttribute("data-song-track")==""){
+    if(mp3.getAttribute("data-song-track")=="" || mp3.getAttribute("data-song-track")==0){
       mp3.setAttribute("data-song-track", "1");
     }
 
@@ -119,7 +133,7 @@
     if(iconPath[iconPath.length-1]=="play.png"){
       document.getElementById("playIcon").src="./images/pause.png";
       var actualTrack = mp3.getAttribute("data-song-track");
-                
+
       var songData = getSongData(actualTrack);
 
       mp3.src = "./music/"+encodeURIComponent(songData[0])+".mp3";
@@ -155,14 +169,12 @@
 
   function nextSong(){
     setTimerTo0();
-    var actualTrack;
-    var trackInfo=trackInfo=document.getElementById('trackInfo');
+    actualTrack=mp3.getAttribute("data-song-track");    var trackInfo=trackInfo=document.getElementById('trackInfo');
 
     if(random==1){
       var limit = document.getElementById("1").getAttribute("data-songs-quantity");
       actualTrack= Math.floor((Math.random() * limit) + 1);
     }else{
-      actualTrack=mp3.getAttribute("data-song-track");
       actualTrack++;
 
       if(actualTrack>document.getElementById("1").getAttribute("data-songs-quantity")){
@@ -171,9 +183,7 @@
     }
 
     mp3.setAttribute("data-song-track", actualTrack);
-
     var songData = getSongData(actualTrack);
-    console.log(songData);
             
     mp3.src="./music/"+encodeURIComponent(songData[0])+".mp3";
     setSongData(songData);
@@ -210,12 +220,10 @@
   function setRandomMusic(){
     if(random==1){
       random=0;
-      console.log("Random: "+random);
       document.getElementById('randomButton').src="./images/random.png";
     }else{
       random=1;
       document.getElementById('randomButton').src="./images/randomPressed.png";
-      console.log("Random: "+random);        
     }
   }
 
@@ -253,7 +261,8 @@
   function setAfterSongName(name){
     for(var i=1;i<=songList.length-1;i++){
       if(name==songList[i][0]){
-        mp3.setAttribute("data-song-track", songList[i][2]);
+        mp3.setAttribute("data-song-track", songList[i][4]);
+        console.log(songList[i][4]);
         break;
       }else{
         mp3.setAttribute("data-song-track", 0)
@@ -269,8 +278,10 @@
     for(var i=1;i<=length;i++){
       var name = document.getElementById(i).getAttribute("data-song-name");
       var artist = document.getElementById(i).getAttribute("data-song-artist");
+      var album = document.getElementById(i).getAttribute("data-song-album");
+      var genre = document.getElementById(i).getAttribute("data-song-genre");
       var track = document.getElementById(i).getAttribute("data-song-track");
-      songList[i] = new Array(name, artist, track);
+      songList[i] = new Array(name, artist, album, genre, track);
     }
     return songList;
   }
@@ -304,17 +315,63 @@
   /**********************************************************/
   function recordAction(){
     var language = document.getElementById("selectLanguage").value;
+
     if(language == "English"){
         //English Voice Commands
       speechRs.rec_start('en-IN',function(final_transcript,interim_transcript){
         console.log(final_transcript,interim_transcript);
-      });   
+        if(final_transcript.includes("play") && final_transcript.length>3){  
+          for(var i=1;i<songList.length-1;i++){
+            var songTitle = final_transcript.split("play");
+            songTitle = songTitle[1].trim();
+
+            if(final_transcript.includes("play") && songList[i][0].includes(songTitle)){  
+                track=songList[i][4];
+                playClickedSong(track);
+                console.log("click");
+            }
+          
+            if(final_transcript.toLowerCase() == "play "+songList[i][1].toLowerCase()){
+              showFilteredSongs("artist", songList[i][1]);
+              setTimeout(function(){
+                playSong();
+                console.log("artista");
+              },2000);
+              break;
+            }
+
+            if(final_transcript.toLowerCase() == "play "+songList[i][2].toLowerCase()){
+              showFilteredSongs("album", songList[i][2]);
+              setTimeout(function(){
+                playSong();
+                console.log("album");
+              },1500);
+              break;
+            }        
+
+            if(final_transcript.toLowerCase() == "play "+songList[i][3].toLowerCase()){
+              showFilteredSongs("genre", songList[i][3]);
+              setTimeout(function(){
+                playSong();
+                console.log("genero");
+              },1500);
+              break;
+            }
+
+            if(final_transcript.toLowerCase() == "play "+songList[i][4].toLowerCase()){
+              track=songList[i][4];
+              playClickedSong(track);
+              console.log("numero");
+              break;
+            }
+          }
+        }
+
+      });
       
       speechRs.on("play",function(){ 
         playSong();
       }); 
-
-    
 
       speechRs.on("pause",function(){ 
         pauseSong();
@@ -336,18 +393,59 @@
         setRandomMusic();
       }); 
 
-      /*speechRs.on("play artist",function(){ 
-      var name="";
-      showFilteredSongs("artist", name);
-      }); */
-
     }
 
     if(language == "Español"){              
       //Español Voice Commands
 
       speechRs.rec_start('es-ES',function(final_transcript,interim_transcript){
-        console.log(final_transcript,interim_transcript);
+         console.log(final_transcript,interim_transcript);
+        if(final_transcript.includes("reproducir") && final_transcript.length>3){  
+          for(var i=1;i<songList.length-1;i++){
+            var songTitle = final_transcript.split("reproducir");
+            songTitle = songTitle[1].trim();
+
+            if(final_transcript.includes("reproducir") && songList[i][0].includes(songTitle)){  
+                track=songList[i][4];
+                playClickedSong(track);
+                console.log("click");
+            }
+          
+            if(final_transcript.toLowerCase() == "reproducir "+songList[i][1].toLowerCase()){
+              showFilteredSongs("artist", songList[i][1]);
+              setTimeout(function(){
+                playSong();
+                console.log("artista");
+              },1500);
+              break;
+            }
+
+            if(final_transcript.toLowerCase() == "reproducir "+songList[i][2].toLowerCase()){
+              showFilteredSongs("album", songList[i][2]);
+              setTimeout(function(){
+                playSong();
+                console.log("album");
+              },1500);
+              break;
+            }        
+
+            if(final_transcript.toLowerCase() == "reproducir "+songList[i][3].toLowerCase()){
+              showFilteredSongs("genre", songList[i][3]);
+              setTimeout(function(){
+                playSong();
+                console.log("genero");
+              },1500);
+              break;
+            }
+
+            if(final_transcript.toLowerCase() == "reproducir "+songList[i][4].toLowerCase()){
+              track=songList[i][4];
+              playClickedSong(track);
+              console.log("numero");
+              break;
+            }
+          }
+        }
       });   
 
       speechRs.on("reproducir",function(){ 
@@ -374,7 +472,8 @@
         setRandomMusic();
       });
       
-      //https://www.youtube.com/watch?v=BmdZtjxFFlQ
+     
+     //https://www.youtube.com/watch?v=BmdZtjxFFlQ
     }
   }
 

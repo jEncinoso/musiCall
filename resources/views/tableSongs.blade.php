@@ -1,7 +1,7 @@
 <table id="tableSongs" class="table table-responsive">
 	<tr>
 		<td>
-			<img id="refreshIcon" src="./images/refresh.png" onClick="initiate(); setTimeout(function(){setAfterSongName(mp3.getAttribute('data-song-name'));}, 1000);" vspace="10"/>
+			<img id="refreshIcon" src="./images/refresh.png" onClick="initiate(); setTimeout(function(){setAfterSongName(mp3.getAttribute('data-song-name'))}, 1100);" vspace="10"/>
 		</td>
 		<td colspan="3">
 			<font size="5">{{$filter}}{{$filterName}}</font>

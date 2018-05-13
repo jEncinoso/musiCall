@@ -151,6 +151,32 @@ class musiCallController extends Controller{
         return $songsFullTags;
     }
 
+    public function checkSongs(){
+        $DirectoryToScan="./music";
+        $files=scandir($DirectoryToScan);
+        $names=array();
+        for($i=0;$i<count($files);$i++){
+            $name=explode('.',$files[$i]);
+            array_push($names, $name[0]);
+        }
+        $songs=DB::select("SELECT * FROM t_songs;");
+        $exists;
+        foreach($songs as $song){
+            var_dump($song->name);
+            for($i=0;$i<count($names);$i++){
+                if($song->name == $names[$i]){
+                    $exists=true;
+                    break;
+                }else{
+                    $exists=false;
+                }
+            }
+            if($exists==false){
+                DB::delete("DELETE FROM t_songs WHERE name=?;",[$song->name]);
+            }
+        }
+    }
+
     private function getSongLength($time){
         $mins=(int)$time;
         $secs=($time-$mins)*60;

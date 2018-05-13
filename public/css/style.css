@@ -30,6 +30,10 @@ select#selectLanguage{
     display:none;
 }
 
+.autoMpHead{
+    display:visible;
+}
+
 .overlay {
     height: 100%;
     width: 0;
@@ -74,7 +78,7 @@ select#selectLanguage{
 
 .overlay td{
     overflow-x: hidden;
-    max-width: 15vw !important; 
+   
     text-align: center; 
     vertical-align: middle;
     line-height:100%;
@@ -111,6 +115,10 @@ select#selectLanguage{
     .orderArrows{
         min-width:50px;
         visibility: visible;
+    }
+
+    .overlay td{
+       max-width: 100% !important; 
     }
 }
 
@@ -159,6 +167,10 @@ hr {
     width: 80%;
     height: 45px;
     margin-left: 3%;
+}
+
+input#seekbar{
+    width: 75%;
 }
 
 .nowPlayingRow{
@@ -246,3 +258,4 @@ input[type=range]::-ms-fill-upper {
 input[type=range]:focus::-ms-fill-upper {
   background: #367ebd;
 }
+
