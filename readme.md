@@ -30,9 +30,9 @@ Musicall is a simple mp3 player with some voice recognition functions.
 ## Usage
 
 Clicking the microphone (select language before) you can call some actions like:<br>
-  "play" - Reproduce the selected track.
-  "stop" - Stops the track.
-  "next" - Plays the next song.
-  "back" - Plays the previous song.
+  1."play" - Reproduce the selected track.
+  2."stop" - Stops the track.
+  3."next" - Plays the next song.
+  4."back" - Plays the previous song.
 
 There are more actions but they are in a testing phase.   
