@@ -1,4 +1,4 @@
-![Alt text](./public?raw=true "Title")
+![Alt text](./public/images/logo.png?raw=true "Title")
 
 Musicall is a simple mp3 player with some voice recognition functions.
 
