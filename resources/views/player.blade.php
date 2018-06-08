@@ -57,7 +57,7 @@
           {{ csrf_field() }}
           <div class="autoMpHead">
             <div class="input-group-append">          
-              <button type="submit"  id="uploadSongsButton" class="col btn btn-primary" style="z-index: 0">Upload Songs</button>
+              <button type="submit"  id="uploadSongsButton" class="btn btn-primary col-12" style="z-index: 0">Upload Songs</button>
             </div>  
           </div>
           <div class="mpHead input-group">
@@ -123,8 +123,6 @@
           var mp3=document.getElementById("mp3");
           var timeBar=document.getElementById('seekbar');
           var random=0;
-
-          var songList;
 
           var mins=0;
           var secs=0;
